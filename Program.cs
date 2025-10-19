@@ -1,7 +1,7 @@
+using AzureExcelChat.Utility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 using System.Text;
-using ClosedXML.Excel;
 using System.Text.RegularExpressions;
 
 // 🚀 Azure Excel Chat - Chat with your Excel files using Azure OpenAI!
@@ -58,7 +58,7 @@ try
         try
         {
             Console.WriteLine();
-            
+
             // Step 1: Analyze the query using AI
             var queryResult = await textToQueryFunction.InvokeAsync(kernel, new() { ["input"] = userInput });
             string queryDescription = queryResult.GetValue<string>()!.Trim();
@@ -92,7 +92,7 @@ try
         {
             Console.WriteLine($"❌ Error: {ex.Message}");
             Console.WriteLine();
-            
+
             if (ex.Message.Contains("credentials") || ex.Message.Contains("API") || ex.Message.Contains("authorization"))
             {
                 Console.WriteLine("⚙️ Configuration Help:");
@@ -113,7 +113,7 @@ try
 catch (Exception ex)
 {
     Console.WriteLine($"🚨 Startup Error: {ex.Message}");
-    
+
     if (ex.Message.Contains("AZURE_OPENAI"))
     {
         Console.WriteLine();
@@ -253,42 +253,18 @@ async Task<string> ExecuteExcelQueryAndFormatResults(string filePath, string wor
     {
         try
         {
-            using var workbook = new XLWorkbook(filePath);
-            var worksheet = workbook.Worksheet(worksheetName);
-            
-            if (worksheet == null)
-            {
-                return string.Empty;
-            }
-
-            var usedRange = worksheet.RangeUsed();
-            if (usedRange == null)
-            {
-                return string.Empty;
-            }
-
-            // Convert Excel data to list format
-            var data = new List<List<object>>();
-            foreach (var row in usedRange.Rows())
-            {
-                var rowData = new List<object>();
-                foreach (var cell in row.Cells())
-                {
-                    rowData.Add(cell.Value.ToString() ?? "");
-                }
-                data.Add(rowData);
-            }
+            var dataAll = ExcelUtility.ReadExcelWorksheet(filePath, worksheetName);
 
             // Filter data based on user query and AI description
-            var filteredData = FilterDataBasedOnQuery(data, userQuery, queryDescription);
-            
+            var filteredData = FilterDataBasedOnQuery(dataAll, userQuery, queryDescription);
+
             var resultBuilder = new StringBuilder();
-            
+
             // Add headers
             if (filteredData.Count > 0)
             {
                 resultBuilder.AppendLine(string.Join("\t", filteredData[0]));
-                
+
                 // Add data rows
                 for (int i = 1; i < filteredData.Count; i++)
                 {
@@ -309,13 +285,13 @@ List<List<object>> FilterDataBasedOnQuery(List<List<object>> data, string userQu
 {
     var result = new List<List<object>>();
     if (data.Count == 0) return result;
-    
+
     // Always include headers
     result.Add(data[0]);
-    
+
     var query = userQuery.ToLower();
     var description = queryDescription.ToLower();
-    
+
     // Special handling for department listing queries
     if ((query.Contains("list") && (query.Contains("department") || query.Contains("departments"))) ||
         (description.Contains("list") && (description.Contains("department") || description.Contains("departments"))) ||
@@ -329,13 +305,13 @@ List<List<object>> FilterDataBasedOnQuery(List<List<object>> data, string userQu
         }
         return result;
     }
-    
+
     // Enhanced filtering logic based on user query and AI description
     for (int i = 1; i < data.Count; i++)
     {
         var row = data[i];
         bool includeRow = false;
-        
+
         // Department-based filtering
         if (query.Contains("engineer") || description.Contains("engineering"))
         {
@@ -447,12 +423,12 @@ List<List<object>> FilterDataBasedOnQuery(List<List<object>> data, string userQu
         {
             includeRow = true; // Default: include all rows for general queries
         }
-        
+
         if (includeRow)
         {
             result.Add(row);
         }
     }
-    
+
     return result;
 }
