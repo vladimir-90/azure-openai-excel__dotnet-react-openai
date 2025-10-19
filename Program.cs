@@ -16,120 +16,84 @@ var config = new ConfigurationBuilder()
     .AddEnvironmentVariables()
     .Build();
 
-try
+var kernel = BuildKernel(config);
+
+string excelFilePath = Path.Combine(Directory.GetCurrentDirectory(), "data\\employees-10.xlsx");
+Console.WriteLine($"📁  Using default Excel file path: {excelFilePath}");
+
+Console.WriteLine();
+Console.WriteLine("📋 Excel Schema:");
+string schema = await File.ReadAllTextAsync(
+    Path.Combine(Directory.GetCurrentDirectory(), "data\\employees-10__schema.txt")
+);
+Console.WriteLine(schema);
+
+string actualWorksheetName = "Employees";
+
+Console.WriteLine();
+Console.WriteLine("💬 Chat with your Excel file! Type 'exit' to quit.");
+Console.WriteLine("════════════════════════════════════════");
+
+var textToQueryFunction = CreateTextToQueryFunction(kernel, schema);
+var finalAnswerFunction = CreateFinalAnswerFunction(kernel);
+
+while (true)
 {
-    var kernel = BuildKernel(config);
-
-    string excelFilePath = Path.Combine(Directory.GetCurrentDirectory(), "data\\employees-10.xlsx");
-    Console.WriteLine($"📁  Using default Excel file path: {excelFilePath}");
-
-    Console.WriteLine();
-    Console.WriteLine("📋 Excel Schema:");
-    string schema = await File.ReadAllTextAsync(
-        Path.Combine(Directory.GetCurrentDirectory(), "data\\employees-10__schema.txt")
-    );
-    Console.WriteLine(schema);
-
-    string actualWorksheetName = "Employees";
-
-    Console.WriteLine();
-    Console.WriteLine("💬 Chat with your Excel file! Type 'exit' to quit.");
-    Console.WriteLine("════════════════════════════════════════");
-
-    var textToQueryFunction = CreateTextToQueryFunction(kernel, schema);
-    var finalAnswerFunction = CreateFinalAnswerFunction(kernel);
-
-    while (true)
+    Console.Write("🤖 > ");
+    string userInput = Console.ReadLine() ?? "";
+    if (userInput.Equals("exit", StringComparison.OrdinalIgnoreCase))
     {
-        Console.Write("🤖 > ");
-        string userInput = Console.ReadLine() ?? "";
-        if (userInput.Equals("exit", StringComparison.OrdinalIgnoreCase))
-        {
-            Console.WriteLine("👋 Goodbye! Thanks for using Azure Excel Chat!");
-            break;
-        }
+        Console.WriteLine("👋 Goodbye! Thanks for using Azure Excel Chat!");
+        break;
+    }
 
-        if (string.IsNullOrWhiteSpace(userInput))
+    if (string.IsNullOrWhiteSpace(userInput))
+    {
+        continue;
+    }
+
+    try
+    {
+        Console.WriteLine();
+
+        // Step 1: Analyze the query using AI
+        var queryResult = await textToQueryFunction.InvokeAsync(kernel, new() { ["input"] = userInput });
+        string queryDescription = queryResult.GetValue<string>()!.Trim();
+        Console.WriteLine($"🔍 Query Analysis: {queryDescription}");
+
+        // Step 2: Execute the query on Excel data
+        var dataAll = ExcelUtility.ReadExcelWorksheet(excelFilePath, actualWorksheetName);
+        var dataFiltered = FilterDataBasedOnQuery(dataAll, userInput, queryDescription);
+        string excel_data_str = string.Join('\n', dataFiltered.Select(data_line => string.Join("\t", data_line)));
+        if (string.IsNullOrWhiteSpace(excel_data_str))
         {
+            Console.WriteLine("❌ No data found for that query.");
+            Console.WriteLine();
             continue;
         }
-
-        try
+        else
         {
-            Console.WriteLine();
-
-            // Step 1: Analyze the query using AI
-            var queryResult = await textToQueryFunction.InvokeAsync(kernel, new() { ["input"] = userInput });
-            string queryDescription = queryResult.GetValue<string>()!.Trim();
-            Console.WriteLine($"🔍 Query Analysis: {queryDescription}");
-
-            // Step 2: Execute the query on Excel data
-            var dataAll = ExcelUtility.ReadExcelWorksheet(excelFilePath, actualWorksheetName);
-            var dataFiltered = FilterDataBasedOnQuery(dataAll, userInput, queryDescription);
-            string excel_data_str = string.Join('\n', dataFiltered.Select(data_line => string.Join("\t", data_line)));
-            if (string.IsNullOrWhiteSpace(excel_data_str))
-            {
-                Console.WriteLine("❌ No data found for that query.");
-                Console.WriteLine();
-                continue;
-            }
-            else
-            {
-                Console.WriteLine($"📊 Excel Data Retrieved:");
-                Console.WriteLine($"```");
-                Console.WriteLine(excel_data_str);
-                Console.WriteLine($"```");
-            }
-
-            // Step 3: Generate natural language answer
-            var finalAnswerResult = await finalAnswerFunction.InvokeAsync(kernel, new()
-            {
-                ["input"] = userInput,
-                ["data"] = excel_data_str
-            });
-
-            Console.WriteLine($"💡 Answer: {finalAnswerResult.GetValue<string>()}");
-            Console.WriteLine();
-            Console.WriteLine("════════════════════════════════════════");
+            Console.WriteLine($"📊 Excel Data Retrieved:");
+            Console.WriteLine($"```");
+            Console.WriteLine(excel_data_str);
+            Console.WriteLine($"```");
         }
-        catch (Exception ex)
+
+        // Step 3: Generate natural language answer
+        var finalAnswerResult = await finalAnswerFunction.InvokeAsync(kernel, new()
         {
-            Console.WriteLine($"❌ Error: {ex.Message}");
-            Console.WriteLine();
+            ["input"] = userInput,
+            ["data"] = excel_data_str
+        });
 
-            if (ex.Message.Contains("credentials") || ex.Message.Contains("API") || ex.Message.Contains("authorization"))
-            {
-                Console.WriteLine("⚙️ Configuration Help:");
-                Console.WriteLine("Make sure you have set the following user secrets:");
-                Console.WriteLine("1. AZURE_OPENAI_API_KEY: Your Azure OpenAI API key");
-                Console.WriteLine("2. AZURE_OPENAI_ENDPOINT: Your Azure OpenAI endpoint URL");
-                Console.WriteLine("3. AZURE_OPENAI_DEPLOYMENT_NAME: Your GPT model deployment name");
-                Console.WriteLine();
-                Console.WriteLine("Use these commands to set them:");
-                Console.WriteLine("dotnet user-secrets set \"AZURE_OPENAI_API_KEY\" \"your-key\"");
-                Console.WriteLine("dotnet user-secrets set \"AZURE_OPENAI_ENDPOINT\" \"https://your-resource.openai.azure.com/\"");
-                Console.WriteLine("dotnet user-secrets set \"AZURE_OPENAI_DEPLOYMENT_NAME\" \"your-deployment\"");
-                Console.WriteLine();
-            }
-        }
+        Console.WriteLine($"💡 Answer: {finalAnswerResult.GetValue<string>()}");
+        Console.WriteLine();
+        Console.WriteLine("════════════════════════════════════════");
     }
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"🚨 Startup Error: {ex.Message}");
-
-    if (ex.Message.Contains("AZURE_OPENAI"))
+    catch (Exception ex)
     {
+        Console.WriteLine($"❌ Error: {ex.Message}");
         Console.WriteLine();
-        Console.WriteLine("🛠️ Setup Required:");
-        Console.WriteLine("Please configure your Azure OpenAI credentials using user secrets.");
-        Console.WriteLine("Run the setup commands shown in the README.md file.");
-        Console.WriteLine();
-        Console.WriteLine("Quick setup:");
-        Console.WriteLine("dotnet user-secrets init");
-        Console.WriteLine("dotnet user-secrets set \"AZURE_OPENAI_API_KEY\" \"your-key\"");
-        Console.WriteLine("dotnet user-secrets set \"AZURE_OPENAI_ENDPOINT\" \"https://your-resource.openai.azure.com/\"");
-        Console.WriteLine("dotnet user-secrets set \"AZURE_OPENAI_DEPLOYMENT_NAME\" \"your-deployment\"");
     }
 }
 
