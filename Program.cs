@@ -37,8 +37,8 @@ Console.WriteLine();
 Console.WriteLine("💬 Chat with your Excel file! Type 'exit' to quit.");
 Console.WriteLine("════════════════════════════════════════");
 
-var textToQueryFunction = CreateTextToQueryFunction(kernel, schema);
-var finalAnswerFunction = CreateFinalAnswerFunction(kernel);
+var fn_getQueryDescription = CreateTextToQueryFunction(kernel, schema);
+var fn_getAnswer = CreateFinalAnswerFunction(kernel);
 
 while (true)
 {
@@ -60,7 +60,10 @@ while (true)
         Console.WriteLine();
 
         // Step 1: Analyze the query using AI
-        var queryResult = await textToQueryFunction.InvokeAsync(kernel, new() { ["input"] = userInput });
+        var queryResult = await kernel.InvokeAsync(
+            fn_getQueryDescription,
+            new() { ["input"] = userInput }
+        );
         string queryDescription = queryResult.GetValue<string>()!.Trim();
         Console.WriteLine($"🔍 Query Analysis: {queryDescription}");
 
@@ -83,11 +86,10 @@ while (true)
         }
 
         // Step 3: Generate natural language answer
-        var finalAnswerResult = await finalAnswerFunction.InvokeAsync(kernel, new()
-        {
-            ["input"] = userInput,
-            ["data"] = excel_data_str
-        });
+        var finalAnswerResult = await kernel.InvokeAsync(
+            fn_getAnswer,
+            new() { ["input"] = userInput, ["data"] = excel_data_str }
+        );
 
         Console.WriteLine($"💡 Answer: {finalAnswerResult.GetValue<string>()}");
         Console.WriteLine();
@@ -102,7 +104,7 @@ while (true)
 
 KernelFunction CreateTextToQueryFunction(Kernel kernel, string schema)
 {
-    const string prompt = @"
+    const string promptTemplate = @"
 Given the following Excel worksheet data structure, analyze the user's question and describe what data should be filtered or retrieved.
 - Describe the filtering logic clearly
 - Mention specific column names and conditions
@@ -120,30 +122,22 @@ User Question: {{$input}}
 Query Description (be specific and actionable):
 ";
 
-    var executionSettings = new PromptExecutionSettings()
-    {
-        ExtensionData = new Dictionary<string, object>()
+    return kernel.CreateFunctionFromPrompt(
+        promptTemplate.Replace("{{$schema}}", schema),
+        new PromptExecutionSettings
         {
-            { "temperature", 0.1 },
-            { "max_tokens", 200 }
+            ExtensionData = new Dictionary<string, object>()
+            {
+                { "temperature", 0.1 },
+                { "max_tokens", 200 }
+            }
         }
-    };
-
-    var promptConfig = new PromptTemplateConfig
-    {
-        Template = prompt.Replace("{{$schema}}", schema),
-        ExecutionSettings = new Dictionary<string, PromptExecutionSettings>
-        {
-            { "default", executionSettings }
-        }
-    };
-
-    return KernelFunctionFactory.CreateFromPrompt(promptConfig);
+    );
 }
 
 KernelFunction CreateFinalAnswerFunction(Kernel kernel)
 {
-    const string prompt = @"
+    const string promptTemplate = @"
 Answer the following user's question based ONLY on the provided data from the Excel file.
 - Be friendly, conversational, and concise
 - If calculations are needed, perform them accurately
@@ -163,23 +157,15 @@ User Question: {{$input}}
 Answer:
 ";
 
-    var executionSettings = new PromptExecutionSettings()
-    {
-        ExtensionData = new Dictionary<string, object>()
+    return kernel.CreateFunctionFromPrompt(
+        promptTemplate,
+        new PromptExecutionSettings
         {
-            { "temperature", 0.3 },
-            { "max_tokens", 300 }
+            ExtensionData = new Dictionary<string, object>()
+            {
+                { "temperature", 0.3 },
+                { "max_tokens", 300 }
+            }
         }
-    };
-
-    var promptConfig = new PromptTemplateConfig
-    {
-        Template = prompt,
-        ExecutionSettings = new Dictionary<string, PromptExecutionSettings>
-        {
-            { "default", executionSettings }
-        }
-    };
-
-    return KernelFunctionFactory.CreateFromPrompt(promptConfig);
+    );
 }
