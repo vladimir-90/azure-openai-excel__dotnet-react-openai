@@ -1,7 +1,6 @@
 using AzureExcelChat.Utility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
-using System.Text;
 using System.Text.RegularExpressions;
 
 // 🚀 Azure Excel Chat - Chat with your Excel files using Azure OpenAI!
@@ -65,23 +64,28 @@ try
             Console.WriteLine($"🔍 Query Analysis: {queryDescription}");
 
             // Step 2: Execute the query on Excel data
-            string excelData = await ExecuteExcelQueryAndFormatResults(excelFilePath, actualWorksheetName, userInput, queryDescription);
-            if (string.IsNullOrWhiteSpace(excelData))
+            var dataAll = ExcelUtility.ReadExcelWorksheet(excelFilePath, actualWorksheetName);
+            var dataFiltered = FilterDataBasedOnQuery(dataAll, userInput, queryDescription);
+            string excel_data_str = string.Join('\n', dataFiltered.Select(data_line => string.Join("\t", data_line)));
+            if (string.IsNullOrWhiteSpace(excel_data_str))
             {
                 Console.WriteLine("❌ No data found for that query.");
                 Console.WriteLine();
                 continue;
             }
-            Console.WriteLine($"📊 Excel Data Retrieved:");
-            Console.WriteLine($"```");
-            Console.WriteLine(excelData);
-            Console.WriteLine($"```");
+            else
+            {
+                Console.WriteLine($"📊 Excel Data Retrieved:");
+                Console.WriteLine($"```");
+                Console.WriteLine(excel_data_str);
+                Console.WriteLine($"```");
+            }
 
             // Step 3: Generate natural language answer
             var finalAnswerResult = await finalAnswerFunction.InvokeAsync(kernel, new()
             {
                 ["input"] = userInput,
-                ["data"] = excelData
+                ["data"] = excel_data_str
             });
 
             Console.WriteLine($"💡 Answer: {finalAnswerResult.GetValue<string>()}");
@@ -245,40 +249,6 @@ Answer:
     };
 
     return KernelFunctionFactory.CreateFromPrompt(promptConfig);
-}
-
-async Task<string> ExecuteExcelQueryAndFormatResults(string filePath, string worksheetName, string userQuery, string queryDescription)
-{
-    return await Task.Run(() =>
-    {
-        try
-        {
-            var dataAll = ExcelUtility.ReadExcelWorksheet(filePath, worksheetName);
-
-            // Filter data based on user query and AI description
-            var filteredData = FilterDataBasedOnQuery(dataAll, userQuery, queryDescription);
-
-            var resultBuilder = new StringBuilder();
-
-            // Add headers
-            if (filteredData.Count > 0)
-            {
-                resultBuilder.AppendLine(string.Join("\t", filteredData[0]));
-
-                // Add data rows
-                for (int i = 1; i < filteredData.Count; i++)
-                {
-                    resultBuilder.AppendLine(string.Join("\t", filteredData[i]));
-                }
-            }
-
-            return resultBuilder.ToString();
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"Error reading Excel file: {ex.Message}");
-        }
-    });
 }
 
 List<List<object>> FilterDataBasedOnQuery(List<List<object>> data, string userQuery, string queryDescription)
