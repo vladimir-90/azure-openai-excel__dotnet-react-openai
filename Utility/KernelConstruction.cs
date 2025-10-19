@@ -16,4 +16,20 @@ internal static class KernelConstruction
 
         return builder.Build();
     }
+
+    public static KernelFunction CreateFunction(
+        Kernel kernel, string promptTemplate, double temperature, int max_tokens)
+    {
+        return kernel.CreateFunctionFromPrompt(
+            promptTemplate,
+            new PromptExecutionSettings
+            {
+                ExtensionData = new Dictionary<string, object>
+                {
+                    { "temperature", temperature },
+                    { "max_tokens", max_tokens }
+                }
+            }
+        );
+    }
 }

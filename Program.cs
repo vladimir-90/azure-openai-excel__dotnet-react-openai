@@ -1,6 +1,5 @@
 using AzureExcelChat.Utility;
 using Microsoft.Extensions.Configuration;
-using Microsoft.SemanticKernel;
 
 // 🚀 Azure Excel Chat - Chat with your Excel files using Azure OpenAI!
 
@@ -14,12 +13,6 @@ var config = new ConfigurationBuilder()
     .AddUserSecrets<Program>()
     .AddEnvironmentVariables()
     .Build();
-
-var kernel = KernelConstruction.Create(
-    config["AZURE_OPENAI_ENDPOINT"]!,
-    config["AZURE_OPENAI_API_KEY"]!,
-    config["AZURE_OPENAI_DEPLOYMENT_NAME"]!
-);
 
 string excelFilePath = Path.Combine(Directory.GetCurrentDirectory(), "data\\employees-10.xlsx");
 Console.WriteLine($"📁  Using default Excel file path: {excelFilePath}");
@@ -37,8 +30,13 @@ Console.WriteLine();
 Console.WriteLine("💬 Chat with your Excel file! Type 'exit' to quit.");
 Console.WriteLine("════════════════════════════════════════");
 
-var fn_getQueryDescription = CreateTextToQueryFunction(kernel, schema);
-var fn_getAnswer = CreateFinalAnswerFunction(kernel);
+var kernel = KernelConstruction.Create(
+    config["AZURE_OPENAI_ENDPOINT"]!,
+    config["AZURE_OPENAI_API_KEY"]!,
+    config["AZURE_OPENAI_DEPLOYMENT_NAME"]!
+);
+var fn_getQueryDescription = KernelConstruction.CreateFunction(kernel, Prompts.QueryDescription, 0.1, 200);
+var fn_getAnswer = KernelConstruction.CreateFunction(kernel, Prompts.FinalAnswer, 0.3, 300);
 
 while (true)
 {
@@ -62,7 +60,7 @@ while (true)
         // Step 1: Analyze the query using AI
         var queryResult = await kernel.InvokeAsync(
             fn_getQueryDescription,
-            new() { ["input"] = userInput }
+            new() { ["input"] = userInput, ["schema"] = schema }
         );
         string queryDescription = queryResult.GetValue<string>()!.Trim();
         Console.WriteLine($"🔍 Query Analysis: {queryDescription}");
@@ -100,72 +98,4 @@ while (true)
         Console.WriteLine($"❌ Error: {ex.Message}");
         Console.WriteLine();
     }
-}
-
-KernelFunction CreateTextToQueryFunction(Kernel kernel, string schema)
-{
-    const string promptTemplate = @"
-Given the following Excel worksheet data structure, analyze the user's question and describe what data should be filtered or retrieved.
-- Describe the filtering logic clearly
-- Mention specific column names and conditions
-- Be specific about what data should be returned
-- If it's a calculation (like average, sum, count), mention that clearly
-- Focus on the most relevant data for the user's question
-
-Schema:
----
-{{$schema}}
----
-
-User Question: {{$input}}
-
-Query Description (be specific and actionable):
-";
-
-    return kernel.CreateFunctionFromPrompt(
-        promptTemplate.Replace("{{$schema}}", schema),
-        new PromptExecutionSettings
-        {
-            ExtensionData = new Dictionary<string, object>()
-            {
-                { "temperature", 0.1 },
-                { "max_tokens", 200 }
-            }
-        }
-    );
-}
-
-KernelFunction CreateFinalAnswerFunction(Kernel kernel)
-{
-    const string promptTemplate = @"
-Answer the following user's question based ONLY on the provided data from the Excel file.
-- Be friendly, conversational, and concise
-- If calculations are needed, perform them accurately
-- If the data is empty or insufficient, say you could not find an answer
-- Use specific numbers and names when available
-- Format numbers appropriately (e.g., $95,000 for salaries)
-- For department listing questions, extract and list the unique departments from the data
-- For department counts, count unique occurrences
-
-Data from Excel:
----
-{{$data}}
----
-
-User Question: {{$input}}
-
-Answer:
-";
-
-    return kernel.CreateFunctionFromPrompt(
-        promptTemplate,
-        new PromptExecutionSettings
-        {
-            ExtensionData = new Dictionary<string, object>()
-            {
-                { "temperature", 0.3 },
-                { "max_tokens", 300 }
-            }
-        }
-    );
 }
