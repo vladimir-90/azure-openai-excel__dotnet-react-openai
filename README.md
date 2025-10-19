@@ -2,6 +2,12 @@
 
 **Chat with your Excel files using natural language powered by Azure OpenAI!**
 
+Forked from https://github.com/donpotts/AzureExcelChat
+
+SemanticKernel:
+    https://learn.microsoft.com/en-us/semantic-kernel/overview/
+    https://github.com/microsoft/semantic-kernel/tree/main/dotnet
+
 
 ## 💭 Example Queries
 
