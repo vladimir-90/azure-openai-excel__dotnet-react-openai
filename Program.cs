@@ -21,24 +21,18 @@ try
 {
     var kernel = BuildKernel(config);
 
-    // Configuration - Get Excel file path from configuration
-    string? excelFilePath = config["EXCEL_FILE_PATH"];
-    if (string.IsNullOrEmpty(excelFilePath))
-    {
-        // Use default path in current directory
-        excelFilePath = Path.Combine(Directory.GetCurrentDirectory(), "employees.xlsx");
-        Console.WriteLine($"📁  Using default Excel file path: {excelFilePath}");
-    }
-
-    string worksheetName = "Employees";
-
-    Console.WriteLine("⚙️ Setting up Excel file...");
-    string actualWorksheetName = SetupExcelFile(excelFilePath, worksheetName);
-    string schema = GetExcelSchema();
+    string excelFilePath = Path.Combine(Directory.GetCurrentDirectory(), "data\\employees-10.xlsx");
+    Console.WriteLine($"📁  Using default Excel file path: {excelFilePath}");
 
     Console.WriteLine();
     Console.WriteLine("📋 Excel Schema:");
+    string schema = await File.ReadAllTextAsync(
+        Path.Combine(Directory.GetCurrentDirectory(), "data\\employees-10__schema.txt")
+    );
     Console.WriteLine(schema);
+
+    string actualWorksheetName = "Employees";
+
     Console.WriteLine();
     Console.WriteLine("💬 Chat with your Excel file! Type 'exit' to quit.");
     Console.WriteLine("════════════════════════════════════════");
@@ -461,146 +455,4 @@ List<List<object>> FilterDataBasedOnQuery(List<List<object>> data, string userQu
     }
     
     return result;
-}
-
-string SetupExcelFile(string filePath, string worksheetName)
-{
-    try
-    {
-        XLWorkbook? workbook = null;
-        IXLWorksheet? worksheet = null;
-        bool fileExists = File.Exists(filePath);
-        
-        if (fileExists)
-        {
-            try
-            {
-                workbook = new XLWorkbook(filePath);
-                worksheet = workbook.Worksheets.FirstOrDefault(w => w.Name == worksheetName);
-            }
-            catch
-            {
-                // File might be corrupted, create new one
-                fileExists = false;
-            }
-        }
-
-        if (!fileExists || workbook == null)
-        {
-            workbook = new XLWorkbook();
-        }
-
-        string actualWorksheetName = worksheetName;
-        
-        if (worksheet == null)
-        {
-            // Create new worksheet
-            worksheet = workbook.Worksheets.Add(worksheetName);
-            Console.WriteLine($"✅ Created new worksheet: {worksheetName}");
-        }
-        else
-        {
-            // Clear existing data
-            worksheet.Clear();
-            Console.WriteLine($"📄  Using existing worksheet: {actualWorksheetName}");
-        }
-        
-        // Add headers first
-        worksheet.Cell("A1").Value = "Id";
-        worksheet.Cell("B1").Value = "Name";
-        worksheet.Cell("C1").Value = "Department";
-        worksheet.Cell("D1").Value = "Salary";
-        worksheet.Cell("E1").Value = "HireDate";
-        
-        // Add sample data row by row to ensure proper column distribution
-        var sampleEmployees = new[]
-        {
-            new { Id = "1", Name = "Alice Johnson", Department = "Engineering", Salary = "95000", HireDate = "2022-01-15" },
-            new { Id = "2", Name = "Bob Smith", Department = "Sales", Salary = "82000", HireDate = "2021-11-30" },
-            new { Id = "3", Name = "Charlie Brown", Department = "Engineering", Salary = "110000", HireDate = "2020-05-20" },
-            new { Id = "4", Name = "Diana Prince", Department = "Sales", Salary = "78000", HireDate = "2022-08-01" },
-            new { Id = "5", Name = "Eve Adams", Department = "HR", Salary = "65000", HireDate = "2023-02-10" },
-            new { Id = "6", Name = "Frank Wilson", Department = "Marketing", Salary = "72000", HireDate = "2021-09-15" },
-            new { Id = "7", Name = "Grace Liu", Department = "Engineering", Salary = "103000", HireDate = "2023-01-20" },
-            new { Id = "8", Name = "Henry Davis", Department = "Sales", Salary = "85000", HireDate = "2022-03-12" },
-            new { Id = "9", Name = "Ivy Chen", Department = "HR", Salary = "70000", HireDate = "2020-12-05" },
-            new { Id = "10", Name = "Jack Miller", Department = "Marketing", Salary = "68000", HireDate = "2023-05-18" }
-        };
-
-        // Insert data row by row
-        for (int i = 0; i < sampleEmployees.Length; i++)
-        {
-            int row = i + 2; // Start from row 2 (after headers)
-            var employee = sampleEmployees[i];
-            
-            worksheet.Cell($"A{row}").Value = employee.Id;
-            worksheet.Cell($"B{row}").Value = employee.Name;
-            worksheet.Cell($"C{row}").Value = employee.Department;
-            worksheet.Cell($"D{row}").Value = employee.Salary;
-            worksheet.Cell($"E{row}").Value = employee.HireDate;
-        }
-        
-        // Format headers
-        var headerRange = worksheet.Range("A1:E1");
-        headerRange.Style.Font.Bold = true;
-        headerRange.Style.Fill.BackgroundColor = XLColor.LightBlue;
-        headerRange.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
-        
-        // Format salary column as currency
-        var salaryRange = worksheet.Range("D2:D11");
-        salaryRange.Style.NumberFormat.Format = "$#,##0";
-        
-        // Auto-fit columns
-        worksheet.Columns().AdjustToContents();
-        
-        // Save the workbook
-        workbook.SaveAs(filePath);
-        workbook.Dispose();
-
-        Console.WriteLine($"📊 Excel file '{actualWorksheetName}' populated with sample data");
-        Console.WriteLine($"📍 File location: {filePath}");
-        
-        return actualWorksheetName;
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"❌ Error setting up Excel file: {ex.Message}");
-        Console.WriteLine();
-        Console.WriteLine("🔧 Troubleshooting:");
-        Console.WriteLine("1. Ensure you have write permissions to the file location");
-        Console.WriteLine("2. Make sure the Excel file is not open in another application");
-        Console.WriteLine("3. Try setting a custom EXCEL_FILE_PATH in user secrets");
-        Console.WriteLine();
-        
-        return worksheetName;
-    }
-}
-
-static string GetExcelSchema()
-{
-    return @"
-📋 Excel Worksheet Structure:
-════════════════════════════════════════
-Worksheet Name: Employees
-Columns:
-- A: Id (INTEGER) - Employee ID number
-- B: Name (TEXT) - Employee full name  
-- C: Department (TEXT) - Department (Engineering, Sales, HR, Marketing)
-- D: Salary (INTEGER) - Annual salary in USD
-- E: HireDate (TEXT) - Date hired (YYYY-MM-DD format)
-
-📊 Sample Data Available:
-- Departments: Engineering, Sales, HR, Marketing
-- Salary ranges from $65,000 to $110,000
-- Hire dates from 2020 to 2023
-- 10 employees total in the dataset
-
-💡 Supported Query Types:
-- Filter by department (e.g., 'Who are the engineers?')
-- Filter by salary (e.g., 'Who earns more than $90,000?')
-- Calculate averages (e.g., 'What is the average salary in Sales?')
-- Filter by hire date (e.g., 'Who was hired in 2022?')
-- Count queries (e.g., 'How many people work in Engineering?')
-- General employee information queries
-";
 }
