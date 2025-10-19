@@ -1,6 +1,7 @@
 using AzureExcelChat.Utility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 using System.Text.RegularExpressions;
 
 // 🚀 Azure Excel Chat - Chat with your Excel files using Azure OpenAI!
@@ -16,7 +17,11 @@ var config = new ConfigurationBuilder()
     .AddEnvironmentVariables()
     .Build();
 
-var kernel = BuildKernel(config);
+var kernel = KernelConstruction.Create(
+    config["AZURE_OPENAI_ENDPOINT"]!,
+    config["AZURE_OPENAI_API_KEY"]!,
+    config["AZURE_OPENAI_DEPLOYMENT_NAME"]!
+);
 
 string excelFilePath = Path.Combine(Directory.GetCurrentDirectory(), "data\\employees-10.xlsx");
 Console.WriteLine($"📁  Using default Excel file path: {excelFilePath}");
@@ -95,40 +100,6 @@ while (true)
         Console.WriteLine($"❌ Error: {ex.Message}");
         Console.WriteLine();
     }
-}
-
-#pragma warning disable SKEXP0010
-
-Kernel BuildKernel(IConfiguration config)
-{
-    var builder = Kernel.CreateBuilder();
-
-    string? apiKey = config["AZURE_OPENAI_API_KEY"];
-    string? endpoint = config["AZURE_OPENAI_ENDPOINT"];
-    string? deploymentName = config["AZURE_OPENAI_DEPLOYMENT_NAME"];
-
-    if (string.IsNullOrEmpty(apiKey))
-    {
-        throw new InvalidOperationException("AZURE_OPENAI_API_KEY is not set. Please set it using 'dotnet user-secrets set AZURE_OPENAI_API_KEY your-key' or as an environment variable.");
-    }
-
-    if (string.IsNullOrEmpty(endpoint))
-    {
-        throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set. Please set it using 'dotnet user-secrets set AZURE_OPENAI_ENDPOINT your-endpoint' or as an environment variable.");
-    }
-
-    if (string.IsNullOrEmpty(deploymentName))
-    {
-        throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set. Please set it using 'dotnet user-secrets set AZURE_OPENAI_DEPLOYMENT_NAME your-deployment' or as an environment variable.");
-    }
-
-    builder.AddAzureOpenAIChatCompletion(
-        deploymentName: deploymentName,
-        endpoint: endpoint,
-        apiKey: apiKey
-    );
-
-    return builder.Build();
 }
 
 KernelFunction CreateTextToQueryFunction(Kernel kernel, string schema)
