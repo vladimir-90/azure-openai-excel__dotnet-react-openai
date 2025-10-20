@@ -7,19 +7,16 @@ var config = new ConfigurationBuilder()
     .AddEnvironmentVariables()
     .Build();
 
-string excelFilePath = Path.Combine(Directory.GetCurrentDirectory(), "data\\employees-10.xlsx");
-string excelSchema = await File.ReadAllTextAsync(
-    Path.Combine(Directory.GetCurrentDirectory(), "data\\employees-10__schema.txt")
-);
-string excelWorksheet = "Employees";
+var queryProcessingSvc = new QueryProcessingService(config, OpenAIModelType.Gpt41Nano_Global);
 
-var kernel = KernelConstruction.Create(
-    config["AZURE_OPENAI_ENDPOINT"]!,
-    config["AZURE_OPENAI_API_KEY"]!,
-    config["AZURE_OPENAI_DEPLOYMENT_NAME"]!
-);
-var fn_getQueryDescription = KernelConstruction.CreateFunction(kernel, Prompts.QueryDescription, 0.1, 200);
-var fn_getAnswer = KernelConstruction.CreateFunction(kernel, Prompts.FinalAnswer, 0.3, 300);
+var excelFileInfo = new ExcelFileInfo
+{
+    FilePath = Path.Combine(Directory.GetCurrentDirectory(), "data\\employees-10.xlsx"),
+    Schema = await File.ReadAllTextAsync(
+        Path.Combine(Directory.GetCurrentDirectory(), "data\\employees-10__schema.txt")
+    ),
+    WorksheetName = "Employees"
+};
 
 Console.WriteLine("Azure Excel Chat");
 Console.WriteLine("════════════════════════════════════════");
@@ -31,38 +28,53 @@ while (true)
 {
     Console.Write("\n>>>>>> Your question: ");
     string userInput = Console.ReadLine() ?? "";
-    if (string.IsNullOrWhiteSpace(userInput)) continue;
-    if (userInput.Equals("exit", StringComparison.OrdinalIgnoreCase)) break;
+    if (string.IsNullOrWhiteSpace(userInput))
+        continue;
+    if (userInput.Equals("exit", StringComparison.OrdinalIgnoreCase))
+        break;
 
-    // Step 1: Analyze the query using AI
-    var fnResult_getQueryDescription = await kernel.InvokeAsync(
-        fn_getQueryDescription,
-        new() { ["input"] = userInput, ["schema"] = excelSchema }
-    );
-    string queryDescription = fnResult_getQueryDescription.GetValue<string>()!;
-    Console.WriteLine($"\n>>>>>> Query Analysis: \n\n{queryDescription}");
-    var cost = OpenAIModelCostsCalculator.CalculateDetailedCost(fnResult_getQueryDescription, OpenAIModelType.Gpt41Nano_Global)!;
-    Console.WriteLine($"\n>>>>>> Cost:   input {cost.InputTokenCount} tokens / output: {cost.OutputTokenCount} tokens / {cost.TotalCost} $");
+    var result = await queryProcessingSvc.Execute(userInput, excelFileInfo);
 
-    // Step 2: Execute the query on Excel data
-    var dataAll = ExcelUtility.ReadExcelWorksheet(excelFilePath, excelWorksheet);
-    var dataFiltered = RagFiltration.FilterDataBasedOnQuery(dataAll, userInput, queryDescription);
-    string excel_data_str = string.Join('\n', dataFiltered.Select(data_line => string.Join("\t", data_line)));
-    Console.WriteLine($"\n>>>>>> Excel Data Retrieved:\n");
-    Console.WriteLine(dataFiltered.Any() ? excel_data_str : "No data found for that query.");
-
-    // Step 3: Generate natural language answer
-    if (dataFiltered.Any())
+    foreach (var reqRes in result.Requests)
     {
-        var fnResult_getAnswer = await kernel.InvokeAsync(
-            fn_getAnswer,
-            new() { ["input"] = userInput, ["data"] = excel_data_str }
-        );
-        string finalAnswer = fnResult_getAnswer.GetValue<string>()!;
-        Console.WriteLine($"\n>>>>>> Answer:\n\n{finalAnswer}");
-        cost = OpenAIModelCostsCalculator.CalculateDetailedCost(fnResult_getAnswer, OpenAIModelType.Gpt41Nano_Global)!;
-        Console.WriteLine($"\n>>>>>> Cost:   input {cost.InputTokenCount} tokens / output: {cost.OutputTokenCount} tokens / {cost.TotalCost} $");
+        if (reqRes.IsSynthetic)
+        {
+            Console.WriteLine(
+@$"
+        [System]:
+
+{reqRes.Response}");
+        }
+        else
+        {
+            var cost = reqRes.Costs!;
+            Console.WriteLine(
+$@"      
+        [System]:
+
+{reqRes.Request}
+
+        [AI]:
+
+{reqRes.Response}
+
+>>>>>> Cost:  input {cost.InputTokenCount} tokens / output: {cost.OutputTokenCount} tokens / {cost.TotalCost} $");
+        }
     }
+
+    var summ = new QueryDetailedCost
+    {
+        InputTokenCount = result.Requests.Where(r => !r.IsSynthetic).Sum(r => r.Costs!.InputTokenCount),
+        OutputTokenCount = result.Requests.Where(r => !r.IsSynthetic).Sum(r => r.Costs!.OutputTokenCount),
+        TotalCost = result.Requests.Where(r => !r.IsSynthetic).Sum(r => r.Costs!.TotalCost)
+    };
+    Console.WriteLine(
+@$"
+        [TOTAL COST]:
+
+- input {summ.InputTokenCount} tokens
+- output: {summ.OutputTokenCount} tokens
+- {summ.TotalCost} $");
 
     Console.WriteLine("\n════════════════════════════════════════");
 }
