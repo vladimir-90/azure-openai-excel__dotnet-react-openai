@@ -1,3 +1,4 @@
+using AzureExcelChat.InitialSample;
 using AzureExcelChat.Utility;
 using Microsoft.Extensions.Configuration;
 

@@ -1,4 +1,4 @@
-﻿namespace AzureExcelChat.Utility;
+﻿namespace AzureExcelChat.InitialSample;
 
 internal static class Prompts
 {
