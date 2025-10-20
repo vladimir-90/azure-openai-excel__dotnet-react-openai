@@ -1,0 +1,24 @@
+﻿Columns:
+- A: Id (INTEGER) - Employee ID number
+- B: Name (TEXT) - Employee full name
+- C: Department (TEXT) - Department (Engineering, Sales, HR, Marketing)
+- D: Salary (INTEGER) - Annual salary in USD
+- E: HireDate (TEXT) - Date hired (YYYY-MM-DD format)
+- F: YearsExperience (INTEGER) - How many working experience an employee has
+- G: HasHigherEducation (BOOLEAN) - true, if employee has higher education
+
+Sample Data Available:
+- Departments: Engineering, Sales, HR, Marketing
+- Salary ranges from $65,000 to $110,000
+- Hire dates from 2020 to 2023
+- 10 employees total in the dataset
+
+Supported Query Types:
+- Filter by department (e.g., 'Who are the engineers?')
+- Filter by salary (e.g., 'Who earns more than $90,000?')
+- Filter by YearsExperience (e.g. 'Who has 5+ years of experience in total')
+- Filter by HasHigherEducation (e.g. 'Average salary among employees with highest education')
+- Calculate averages (e.g., 'What is the average salary in Sales?')
+- Filter by hire date (e.g., 'Who was hired in 2022?')
+- Count queries (e.g., 'How many people work in Engineering?')
+- General employee information queries
