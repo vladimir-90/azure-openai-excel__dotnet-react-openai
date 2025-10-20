@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace AzureExcelChat.Utility;
+namespace AzureExcelChat.InitialSample;
 
 internal static class RagFiltration
 {
@@ -16,10 +16,10 @@ internal static class RagFiltration
         var description = queryDescription.ToLower();
 
         // Special handling for department listing queries
-        if ((query.Contains("list") && (query.Contains("department") || query.Contains("departments"))) ||
-            (description.Contains("list") && (description.Contains("department") || description.Contains("departments"))) ||
-            (query.Contains("what") && (query.Contains("department") || query.Contains("departments"))) ||
-            (query.Contains("show") && (query.Contains("department") || query.Contains("departments"))))
+        if (query.Contains("list") && (query.Contains("department") || query.Contains("departments")) ||
+            description.Contains("list") && (description.Contains("department") || description.Contains("departments")) ||
+            query.Contains("what") && (query.Contains("department") || query.Contains("departments")) ||
+            query.Contains("show") && (query.Contains("department") || query.Contains("departments")))
         {
             // For department listing, we want to show all employees so the AI can extract unique departments
             for (int i = 1; i < data.Count; i++)
