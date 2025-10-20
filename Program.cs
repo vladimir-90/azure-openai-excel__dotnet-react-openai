@@ -46,22 +46,18 @@ while (true)
     var dataAll = ExcelUtility.ReadExcelWorksheet(excelFilePath, excelWorksheet);
     var dataFiltered = RagFiltration.FilterDataBasedOnQuery(dataAll, userInput, queryDescription);
     string excel_data_str = string.Join('\n', dataFiltered.Select(data_line => string.Join("\t", data_line)));
-    if (string.IsNullOrWhiteSpace(excel_data_str))
-    {
-        Console.WriteLine("\nNo data found for that query.");
-        continue;
-    }
-    else
-    {
-        Console.WriteLine($"\n>>>>>> Excel Data Retrieved:\n\n{excel_data_str}");
-    }
+    Console.WriteLine($"\n>>>>>> Excel Data Retrieved:\n");
+    Console.WriteLine(dataFiltered.Any() ? excel_data_str : "No data found for that query.");
 
     // Step 3: Generate natural language answer
+    if (dataFiltered.Any())
+    {
     var finalAnswerResult = await kernel.InvokeAsync(
         fn_getAnswer,
         new() { ["input"] = userInput, ["data"] = excel_data_str }
     );
+        Console.WriteLine($"\n>>>>>> Answer:\n\n{finalAnswerResult.GetValue<string>()}");
+    }
 
-    Console.WriteLine($"\n>>>>>> Answer:\n\n{finalAnswerResult.GetValue<string>()}");
     Console.WriteLine("\n════════════════════════════════════════");
 }
