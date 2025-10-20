@@ -1,6 +1,6 @@
 ﻿using ClosedXML.Excel;
 
-namespace AzureExcelChat.Utility;
+namespace AzureExcelChat.Console.Utility;
 
 internal static class ExcelUtility
 {

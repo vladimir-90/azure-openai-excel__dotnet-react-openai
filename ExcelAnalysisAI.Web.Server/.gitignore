@@ -1,0 +1,20 @@
+# Build outputs
+bin/
+obj/
+
+# Visual Studio files
+.vs/
+
+# User settings
+*.user
+*.suo
+
+# Runtime and publish
+publish/
+
+# Package management
+packages/
+
+# Logs and diagnostic files
+*.log
+*.njsproj

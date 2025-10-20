@@ -1,7 +1,7 @@
 ﻿using Microsoft.SemanticKernel;
 using OpenAI.Chat;
 
-namespace AzureExcelChat.Utility;
+namespace AzureExcelChat.Console.Utility;
 
 //      Pricing is here:
 // https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/

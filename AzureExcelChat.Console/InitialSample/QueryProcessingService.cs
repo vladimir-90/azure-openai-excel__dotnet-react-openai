@@ -1,8 +1,8 @@
-﻿using AzureExcelChat.Utility;
+﻿using AzureExcelChat.Console.Utility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 
-namespace AzureExcelChat.InitialSample;
+namespace AzureExcelChat.Console.InitialSample;
 
 internal class QueryProcessingService
 {

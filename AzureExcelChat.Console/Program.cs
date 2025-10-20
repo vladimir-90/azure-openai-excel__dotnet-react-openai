@@ -1,5 +1,5 @@
-using AzureExcelChat.InitialSample;
-using AzureExcelChat.Utility;
+﻿using AzureExcelChat.Console.InitialSample;
+using AzureExcelChat.Console.Utility;
 using Microsoft.Extensions.Configuration;
 
 var config = new ConfigurationBuilder()
