@@ -5,12 +5,22 @@ namespace ExcelAnalysisAI.Web.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class GenerationSettingsController : ControllerBase
+public class GenerationSettingsController(IWebHostEnvironment _env) : ControllerBase
 {
     [HttpGet("available-ai-models")]
     public IActionResult GetAvailableModels()
     {
-        var options = (OpenAIModelType[])Enum.GetValues(typeof(OpenAIModelType));
-        return Ok(options!.Select(x => x.ToString()).ToArray());
+        var modelTypes = (OpenAIModelType[])Enum.GetValues(typeof(OpenAIModelType));
+        var options = modelTypes!.Select(x => x.ToString()).ToArray();
+        return Ok();
+    }
+
+    [HttpGet("test-data-sets")]
+    public IActionResult GetTestDataSets()
+    {
+        var rootDataDir = Path.Combine(_env.ContentRootPath, "Data");
+        var dataDirs = Directory.GetDirectories(rootDataDir)!;
+        var options = dataDirs.Select(x => new DirectoryInfo(x).Name).ToArray();
+        return Ok(options);
     }
 }

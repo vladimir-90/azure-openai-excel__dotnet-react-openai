@@ -23,4 +23,13 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Data\employees-10\data.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\employees-10\schema.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
