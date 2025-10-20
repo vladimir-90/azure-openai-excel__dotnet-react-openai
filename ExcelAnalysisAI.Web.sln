@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelAnalysisAI.Web.Server"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureExcelChat.Console", "AzureExcelChat.Console\AzureExcelChat.Console.csproj", "{942A4690-8718-4741-A014-B8CC254904F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelAnalysisAI.AzureOpenAI", "ExcelAnalysisAI.AzureOpenAI\ExcelAnalysisAI.AzureOpenAI.csproj", "{EB1F57D8-687B-4218-A549-89AA5C829340}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{942A4690-8718-4741-A014-B8CC254904F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{942A4690-8718-4741-A014-B8CC254904F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{942A4690-8718-4741-A014-B8CC254904F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB1F57D8-687B-4218-A549-89AA5C829340}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB1F57D8-687B-4218-A549-89AA5C829340}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB1F57D8-687B-4218-A549-89AA5C829340}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB1F57D8-687B-4218-A549-89AA5C829340}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

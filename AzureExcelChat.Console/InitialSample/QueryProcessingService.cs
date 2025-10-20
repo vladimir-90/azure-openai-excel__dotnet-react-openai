@@ -1,4 +1,5 @@
 ﻿using AzureExcelChat.Console.Utility;
+using ExcelAnalysisAI.AzureOpenAI.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 

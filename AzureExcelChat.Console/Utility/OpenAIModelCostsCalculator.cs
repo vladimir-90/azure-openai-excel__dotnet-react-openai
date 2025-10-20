@@ -1,4 +1,5 @@
-﻿using Microsoft.SemanticKernel;
+﻿using ExcelAnalysisAI.AzureOpenAI.Models;
+using Microsoft.SemanticKernel;
 using OpenAI.Chat;
 
 namespace AzureExcelChat.Console.Utility;
@@ -12,11 +13,11 @@ internal static class OpenAIModelCostsCalculator
     private static readonly Dictionary<OpenAIModelType, OpenAIModelPricing> _pricings = new()
     {
         {
-            OpenAIModelType.Gtp5Nano_Global,
+            OpenAIModelType.GPT_5_nano,
             new OpenAIModelPricing{ Input = 0.05m, CachedInput = 0.01m, Output = 0.4m }
         },
         {
-            OpenAIModelType.Gpt41Nano_Global,
+            OpenAIModelType.GPT_41_nano,
             new OpenAIModelPricing{ Input = 0.10m, CachedInput = 0.03m, Output = 0.40m }
         }
     };
@@ -61,12 +62,6 @@ internal static class OpenAIModelCostsCalculator
         public required decimal CachedInput { get; init; }
         public required decimal Output { get; init; }
     }
-}
-
-enum OpenAIModelType
-{
-    Gtp5Nano_Global,
-    Gpt41Nano_Global
 }
 
 internal class QueryDetailedCost

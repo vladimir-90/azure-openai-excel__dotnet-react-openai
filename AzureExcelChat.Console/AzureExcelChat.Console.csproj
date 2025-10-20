@@ -17,6 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ExcelAnalysisAI.AzureOpenAI\ExcelAnalysisAI.AzureOpenAI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="data\employees-10.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
