@@ -35,12 +35,14 @@ while (true)
     if (userInput.Equals("exit", StringComparison.OrdinalIgnoreCase)) break;
 
     // Step 1: Analyze the query using AI
-    var queryResult = await kernel.InvokeAsync(
+    var fnResult_getQueryDescription = await kernel.InvokeAsync(
         fn_getQueryDescription,
         new() { ["input"] = userInput, ["schema"] = excelSchema }
     );
-    string queryDescription = queryResult.GetValue<string>()!.Trim();
+    string queryDescription = fnResult_getQueryDescription.GetValue<string>()!;
     Console.WriteLine($"\n>>>>>> Query Analysis: \n\n{queryDescription}");
+    var cost = OpenAIModelCostsCalculator.CalculateDetailedCost(fnResult_getQueryDescription, OpenAIModelType.Gpt41Nano_Global)!;
+    Console.WriteLine($"\n>>>>>> Cost:   input {cost.InputTokenCount} tokens / output: {cost.OutputTokenCount} tokens / {cost.TotalCost} $");
 
     // Step 2: Execute the query on Excel data
     var dataAll = ExcelUtility.ReadExcelWorksheet(excelFilePath, excelWorksheet);
@@ -52,11 +54,14 @@ while (true)
     // Step 3: Generate natural language answer
     if (dataFiltered.Any())
     {
-    var finalAnswerResult = await kernel.InvokeAsync(
-        fn_getAnswer,
-        new() { ["input"] = userInput, ["data"] = excel_data_str }
-    );
-        Console.WriteLine($"\n>>>>>> Answer:\n\n{finalAnswerResult.GetValue<string>()}");
+        var fnResult_getAnswer = await kernel.InvokeAsync(
+            fn_getAnswer,
+            new() { ["input"] = userInput, ["data"] = excel_data_str }
+        );
+        string finalAnswer = fnResult_getAnswer.GetValue<string>()!;
+        Console.WriteLine($"\n>>>>>> Answer:\n\n{finalAnswer}");
+        cost = OpenAIModelCostsCalculator.CalculateDetailedCost(fnResult_getAnswer, OpenAIModelType.Gpt41Nano_Global)!;
+        Console.WriteLine($"\n>>>>>> Cost:   input {cost.InputTokenCount} tokens / output: {cost.OutputTokenCount} tokens / {cost.TotalCost} $");
     }
 
     Console.WriteLine("\n════════════════════════════════════════");
