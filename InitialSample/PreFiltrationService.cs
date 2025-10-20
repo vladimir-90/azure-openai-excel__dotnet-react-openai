@@ -2,7 +2,7 @@
 
 namespace AzureExcelChat.InitialSample;
 
-internal static class RagFiltration
+internal static class PreFiltrationService
 {
     public static List<List<object>> FilterDataBasedOnQuery(List<List<object>> data, string userQuery, string queryDescription)
     {

@@ -43,8 +43,8 @@ internal class QueryProcessingService
 
         // Excel data retrieval and filtration based on query dedscription analysis
 
-        var dataAll = ExcelUtility.ReadExcelWorksheet(excelFileInfo.FilePath, excelFileInfo.WorksheetName);     // to_do: ReadWorksheet
-        var dataFiltered = RagFiltration.FilterDataBasedOnQuery(dataAll!, userQuery, userQueryDescription);     // to_do: PreFiltrationService
+        var dataAll = ExcelUtility.ReadWorksheet(excelFileInfo.FilePath, excelFileInfo.WorksheetName);
+        var dataFiltered = PreFiltrationService.FilterDataBasedOnQuery(dataAll!, userQuery, userQueryDescription);
         string excel_data_str = string.Join('\n', dataFiltered.Select(ln => string.Join('\t', ln)));
 
         // Generate natural language answer
