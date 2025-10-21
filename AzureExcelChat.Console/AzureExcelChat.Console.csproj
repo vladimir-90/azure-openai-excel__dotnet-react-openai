@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ExcelAnalysisAI.AzureOpenAI.SemanticKernel\ExcelAnalysisAI.AzureOpenAI.SemanticKernel.csproj" />
     <ProjectReference Include="..\ExcelAnalysisAI.AzureOpenAI\ExcelAnalysisAI.AzureOpenAI.csproj" />
     <ProjectReference Include="..\ExcelAnalysisAI.Core\ExcelAnalysisAI.Core.csproj" />
   </ItemGroup>

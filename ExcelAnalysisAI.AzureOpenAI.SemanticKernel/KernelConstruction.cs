@@ -2,7 +2,7 @@
 
 namespace AzureExcelChat.Console.Utility;
 
-internal static class KernelConstruction
+public static class KernelConstruction
 {
     public static Kernel Create(string endpoint, string apiKey, string deploymentName)
     {
