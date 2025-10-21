@@ -7,3 +7,36 @@ body {
 .card {
 	border: 2px solid #000;
 }
+
+/* QuestionForm specific styles */
+.question-form-card {
+	max-width: 650px;
+	min-width: 450px;
+}
+
+.question-form-header {
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.question-form-select {
+	height: 60px;
+}
+
+.question-form-textarea {
+	height: 120px;
+	resize: vertical;
+}
+
+.question-form-button {
+	border: none;
+	border-radius: 25px;
+	transition: all 0.3s ease;
+}
+
+.question-form-button-enabled {
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.question-form-button-disabled {
+	background: #6c757d;
+}

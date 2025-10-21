@@ -15,18 +15,9 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 	};
 
 	return (
-		<div
-			className="card border-0 shadow-lg"
-			style={{ maxWidth: 650, minWidth: 450 }}
-		>
+		<div className="card border-0 shadow-lg question-form-card">
 			{/* Header */}
-			<div
-				className="card-header bg-gradient text-center py-3 border-0"
-				style={{
-					background:
-						'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-				}}
-			>
+			<div className="card-header question-form-header text-white text-center py-3 border-0">
 				<h4 className="mb-0 fw-light">Excel Analysis AI</h4>
 				<small className="opacity-75">
 					Ask questions about your data
@@ -45,8 +36,7 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 								onChange={(e) =>
 									setSelectedModel(e.target.value)
 								}
-								className="form-select"
-								style={{ height: '60px' }}
+								className="form-select question-form-select"
 							>
 								<option value="" disabled>
 									Choose model...
@@ -75,8 +65,7 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 								onChange={(e) =>
 									setSelectedDataSet(e.target.value)
 								}
-								className="form-select"
-								style={{ height: '60px' }}
+								className="form-select question-form-select"
 							>
 								<option value="" disabled>
 									Choose dataset...
@@ -103,9 +92,8 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 								id="question-textarea"
 								value={question}
 								onChange={(e) => setQuestion(e.target.value)}
-								className="form-control"
+								className="form-control question-form-textarea"
 								placeholder="What would you like to know about your data?"
-								style={{ height: '120px', resize: 'vertical' }}
 							/>
 							<label
 								htmlFor="question-textarea"
@@ -126,23 +114,20 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 			<div className="card-footer bg-light border-0 text-end p-4">
 				<button
 					onClick={handleGoClick}
-					className="btn btn-lg px-5 text-white fw-semibold"
+					className={`btn btn-lg px-5 fw-semibold question-form-button ${
+						selectedModel && selectedDataSet && question.trim()
+							? 'question-form-button-enabled'
+							: 'question-form-button-disabled'
+					}`}
 					disabled={
 						!selectedModel || !selectedDataSet || !question.trim()
 					}
-					style={{
-						background:
-							selectedModel && selectedDataSet && question.trim()
-								? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-								: '#6c757d',
-						border: 'none',
-						borderRadius: '25px',
-						transition: 'all 0.3s ease',
-					}}
 				>
-					{!selectedModel || !selectedDataSet || !question.trim()
-						? '✨ Complete the form above'
-						: '🚀 Analyze Data'}
+					{!selectedModel || !selectedDataSet || !question.trim() ? (
+						<span>Complete the form above</span>
+					) : (
+						<span className="text-white">🚀 Analyze Data</span>
+					)}
 				</button>
 			</div>
 		</div>
