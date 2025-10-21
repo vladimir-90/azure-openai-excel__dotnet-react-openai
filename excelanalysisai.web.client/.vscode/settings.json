@@ -1,0 +1,6 @@
+{
+  "files.exclude": {
+    "excelanalysisai.web.client.esproj": true,
+    "**/obj": true
+  }
+}
