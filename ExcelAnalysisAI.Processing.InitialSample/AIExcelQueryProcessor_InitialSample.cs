@@ -1,10 +1,10 @@
 ﻿using AzureExcelChat.Console.Utility;
 using ExcelAnalysisAI.AzureOpenAI.Models;
-using ExcelAnalysisAI.AzureOpenAI.SemanticKernel.Costs;
 using ExcelAnalysisAI.Core.Utility;
 using ExcelAnalysisAI.Processing.Core;
 using ExcelAnalysisAI.Processing.Core.Contracts;
 using ExcelAnalysisAI.Processing.InitialSample.Constants;
+using ExcelAnalysisAI.Processing.InitialSample.Extensions;
 using ExcelAnalysisAI.Processing.InitialSample.Handling;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
@@ -44,7 +44,7 @@ public class AIExcelQueryProcessor_InitialSample : IAIExcelQueryProcessor
             new() { ["input"] = userQuery, ["schema"] = excelFileInfo.Schema }
         );
 
-        var fnInfo_getDescription = GetRequestInfo(fnResult_getQueryDescription);
+        var fnInfo_getDescription = fnResult_getQueryDescription.ToInfo(_openAIModelType);
         results.Requests.Add(fnInfo_getDescription);
 
         string userQueryDescription = fnInfo_getDescription.Response;
@@ -74,7 +74,7 @@ public class AIExcelQueryProcessor_InitialSample : IAIExcelQueryProcessor
                 new() { ["input"] = userQuery, ["data"] = excel_data_str }
             );
 
-            var fnInfo_finalAnswer = GetRequestInfo(fnResult_getAnswer);
+            var fnInfo_finalAnswer = fnResult_getAnswer.ToInfo(_openAIModelType);
             results.Requests.Add(fnInfo_finalAnswer);
         }
 
@@ -82,12 +82,4 @@ public class AIExcelQueryProcessor_InitialSample : IAIExcelQueryProcessor
 
         return results;
     }
-
-    // to_do: extension-method
-    private AIRequestResponseInfo GetRequestInfo(FunctionResult fnResult) => new()
-    {
-        Request = fnResult.RenderedPrompt!,
-        Response = fnResult.GetValue<string>()!,
-        Cost = OpenAIModelCostsCalculator.CalculateDetailedCost(fnResult, _openAIModelType)!
-    };
 }
