@@ -1,14 +1,15 @@
 ﻿using AzureExcelChat.Console.Utility;
 using ExcelAnalysisAI.AzureOpenAI.Models;
-using ExcelAnalysisAI.AzureOpenAI.Pricing;
 using ExcelAnalysisAI.AzureOpenAI.SemanticKernel.Costs;
 using ExcelAnalysisAI.Core.Utility;
+using ExcelAnalysisAI.Processing.Core;
+using ExcelAnalysisAI.Processing.Core.Contracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 
 namespace AzureExcelChat.Console.InitialSample;
 
-internal class QueryProcessingService
+internal class QueryProcessingService : IAIExcelQueryProcessor
 {
     private readonly Kernel _kernel;
     private readonly KernelFunction fn_getQueryDescription;
@@ -26,9 +27,9 @@ internal class QueryProcessingService
         fn_getAnswer = KernelConstruction.CreateFunction(_kernel, Prompts.FinalAnswer, 0.3, 300);
     }
 
-    public async Task<QueryProcessingResult> Execute(string userQuery, ExcelFileInfo excelFileInfo)
+    public async Task<AIQueryResult> Execute(string userQuery, ExcelFileInfo excelFileInfo)
     {
-        var results = new QueryProcessingResult
+        var results = new AIQueryResult
         {
             UserQuery = userQuery
         };
@@ -55,11 +56,11 @@ internal class QueryProcessingService
 
         if (!dataFiltered.Any())
         {
-            results.Requests.Add(new QueryProcessingResult.AIRequestResponseInfo
+            results.Requests.Add(new AIRequestResponseInfo
             {
                 Request = null,
                 Response = "❌ No data found for the query. AI 'final' answer was not requested",
-                Costs = null,
+                Cost = null,
                 IsSynthetic = true
             });
         }
@@ -79,31 +80,10 @@ internal class QueryProcessingService
         return results;
     }
 
-    private QueryProcessingResult.AIRequestResponseInfo GetRequestInfo(FunctionResult fnResult) => new()
+    private AIRequestResponseInfo GetRequestInfo(FunctionResult fnResult) => new()
     {
         Request = fnResult.RenderedPrompt!,
         Response = fnResult.GetValue<string>()!,
-        Costs = OpenAIModelCostsCalculator.CalculateDetailedCost(fnResult, _openAIModelType)!
+        Cost = OpenAIModelCostsCalculator.CalculateDetailedCost(fnResult, _openAIModelType)!
     };
-}
-
-internal class QueryProcessingResult
-{
-    public required string UserQuery { get; set; }
-    public List<AIRequestResponseInfo> Requests { get; set; } = new List<AIRequestResponseInfo>();
-
-    internal class AIRequestResponseInfo
-    {
-        public required string? Request { get; init; }
-        public required string Response { get; init; }
-        public required OpenAIQueryCost? Costs { get; init; }
-        public bool IsSynthetic { get; init; } = false;
-    }
-}
-
-internal class ExcelFileInfo
-{
-    public required string FilePath { get; init; }
-    public required string WorksheetName { get; init; }
-    public required string Schema { get; init; }
 }

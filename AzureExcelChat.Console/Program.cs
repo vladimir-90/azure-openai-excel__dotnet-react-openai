@@ -2,6 +2,7 @@
 using ExcelAnalysisAI.AzureOpenAI.Models;
 using ExcelAnalysisAI.AzureOpenAI.Pricing;
 using ExcelAnalysisAI.Core.Extensions;
+using ExcelAnalysisAI.Processing.Core.Contracts;
 using Microsoft.Extensions.Configuration;
 
 var config = new ConfigurationBuilder()
@@ -49,7 +50,7 @@ while (true)
         }
         else
         {
-            var cost = reqRes.Costs!;
+            var cost = reqRes.Cost!;
             Console.WriteLine(
 $@"      
         [System]:
@@ -66,9 +67,9 @@ $@"
 
     var summ = new OpenAIQueryCost
     {
-        InputTokenCount = result.Requests.Where(r => !r.IsSynthetic).Sum(r => r.Costs!.InputTokenCount),
-        OutputTokenCount = result.Requests.Where(r => !r.IsSynthetic).Sum(r => r.Costs!.OutputTokenCount),
-        TotalCost = result.Requests.Where(r => !r.IsSynthetic).Sum(r => r.Costs!.TotalCost)
+        InputTokenCount = result.Requests.Where(r => !r.IsSynthetic).Sum(r => r.Cost!.InputTokenCount),
+        OutputTokenCount = result.Requests.Where(r => !r.IsSynthetic).Sum(r => r.Cost!.OutputTokenCount),
+        TotalCost = result.Requests.Where(r => !r.IsSynthetic).Sum(r => r.Cost!.TotalCost)
     };
     Console.WriteLine(
 @$"
