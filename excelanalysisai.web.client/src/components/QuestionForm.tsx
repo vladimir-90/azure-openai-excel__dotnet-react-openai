@@ -58,15 +58,14 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 
 			<div className="mb-3">
 				<label htmlFor="question-textarea" className="form-label">
-					Your question
+					Ask a question
 				</label>
 				<textarea
 					id="question-textarea"
 					value={question}
 					onChange={(e) => setQuestion(e.target.value)}
 					className="form-control"
-					placeholder="Enter your question here..."
-					rows={4}
+					rows={5}
 				/>
 			</div>
 
@@ -76,7 +75,7 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 					className="btn btn-primary"
 					disabled={!selectedModel || !selectedDataSet}
 				>
-					Go
+					Get answer
 				</button>
 			</div>
 		</div>
