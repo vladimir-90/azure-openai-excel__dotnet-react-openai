@@ -5,7 +5,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<UserSecretsId>azure-excel-chat-secrets</UserSecretsId>
+    <UserSecretsId>azure-excel-chat-secrets</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ExcelAnalysisAI.AzureOpenAI.SemanticKernel\ExcelAnalysisAI.AzureOpenAI.SemanticKernel.csproj" />
-    <ProjectReference Include="..\ExcelAnalysisAI.AzureOpenAI\ExcelAnalysisAI.AzureOpenAI.csproj" />
-    <ProjectReference Include="..\ExcelAnalysisAI.Core\ExcelAnalysisAI.Core.csproj" />
-    <ProjectReference Include="..\ExcelAnalysisAI.Processing.Core\ExcelAnalysisAI.Processing.Core.csproj" />
     <ProjectReference Include="..\ExcelAnalysisAI.Processing.InitialSample\ExcelAnalysisAI.Processing.InitialSample.csproj" />
   </ItemGroup>
 
