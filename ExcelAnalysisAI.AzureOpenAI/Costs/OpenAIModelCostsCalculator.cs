@@ -2,12 +2,12 @@
 using Microsoft.SemanticKernel;
 using OpenAI.Chat;
 
-namespace AzureExcelChat.Console.Utility;
+namespace ExcelAnalysisAI.AzureOpenAI.Costs;
 
-//      Pricing is here:
+//      Pricing is taken from here on 2025-10-21:
 // https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/
 
-internal static class OpenAIModelCostsCalculator
+public static class OpenAIModelCostsCalculator
 {
     // Azure OpenAI pricings (per 1M Tokens, 2025-10-14)
     private static readonly Dictionary<OpenAIModelType, OpenAIModelPricing> _pricings = new()
@@ -86,11 +86,4 @@ internal static class OpenAIModelCostsCalculator
         public required decimal CachedInput { get; init; }
         public required decimal Output { get; init; }
     }
-}
-
-internal class QueryDetailedCost
-{
-    public int InputTokenCount { get; set; }
-    public int OutputTokenCount { get; set; }
-    public decimal TotalCost { get; set; }
 }

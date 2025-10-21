@@ -1,4 +1,5 @@
 ﻿using AzureExcelChat.Console.Utility;
+using ExcelAnalysisAI.AzureOpenAI.Costs;
 using ExcelAnalysisAI.AzureOpenAI.Models;
 using ExcelAnalysisAI.Core.Utility;
 using Microsoft.Extensions.Configuration;
