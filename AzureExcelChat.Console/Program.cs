@@ -5,12 +5,18 @@ using ExcelAnalysisAI.Processing.Core.Contracts;
 using ExcelAnalysisAI.Processing.InitialSample;
 using Microsoft.Extensions.Configuration;
 
-var config = new ConfigurationBuilder()
+var configuration = new ConfigurationBuilder()
     .AddUserSecrets<Program>()
     .AddEnvironmentVariables()
     .Build();
 
-var queryProcessingSvc = new AIExcelQueryProcessor_InitialSample(config, OpenAIModelType.GPT_41_nano);
+var queryProcessingSvc = new AIExcelQueryProcessor_InitialSample(new()
+{
+    Type = OpenAIModelType.GPT_41_nano,
+    Endpoint = configuration["AZURE_OPENAI_ENDPOINT"]!,
+    ApiKey = configuration["AZURE_OPENAI_API_KEY"]!,
+    DeploymentName = configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]!
+});
 
 var excelFileInfo = new ExcelFileInfo
 {

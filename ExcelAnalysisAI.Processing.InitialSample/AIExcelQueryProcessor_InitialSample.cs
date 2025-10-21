@@ -1,4 +1,5 @@
 ﻿using AzureExcelChat.Console.Utility;
+using ExcelAnalysisAI.AzureOpenAI.Configuration;
 using ExcelAnalysisAI.AzureOpenAI.Models;
 using ExcelAnalysisAI.Core.Utility;
 using ExcelAnalysisAI.Processing.Core;
@@ -6,7 +7,6 @@ using ExcelAnalysisAI.Processing.Core.Contracts;
 using ExcelAnalysisAI.Processing.InitialSample.Constants;
 using ExcelAnalysisAI.Processing.InitialSample.Extensions;
 using ExcelAnalysisAI.Processing.InitialSample.Handling;
-using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 
 namespace ExcelAnalysisAI.Processing.InitialSample;
@@ -14,18 +14,13 @@ namespace ExcelAnalysisAI.Processing.InitialSample;
 public class AIExcelQueryProcessor_InitialSample : IAIExcelQueryProcessor
 {
     private readonly Kernel _kernel;
+    private readonly OpenAIModelType _openAIModelType;
     private readonly KernelFunction fn_getQueryDescription;
     private readonly KernelFunction fn_getAnswer;
-    private readonly OpenAIModelType _openAIModelType;
-    // TO_DO: inputs parameters as typed model
-    public AIExcelQueryProcessor_InitialSample(IConfiguration configuration, OpenAIModelType openAIModelType)
+    public AIExcelQueryProcessor_InitialSample(AIModelConfiguration config)
     {
-        _kernel = KernelConstruction.Create(
-            configuration["AZURE_OPENAI_ENDPOINT"]!,
-            configuration["AZURE_OPENAI_API_KEY"]!,
-            configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]!
-        );
-        _openAIModelType = openAIModelType;
+        _kernel = KernelConstruction.Create(config.Endpoint, config.ApiKey, config.DeploymentName);
+        _openAIModelType = config.Type;
         fn_getQueryDescription = KernelConstruction.CreateFunction(_kernel, Prompts.QueryDescription, 0.1, 200);
         fn_getAnswer = KernelConstruction.CreateFunction(_kernel, Prompts.FinalAnswer, 0.3, 300);
     }
