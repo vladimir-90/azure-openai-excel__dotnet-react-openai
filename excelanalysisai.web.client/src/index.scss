@@ -30,7 +30,7 @@ body {
 	}
 
 	&-textarea {
-		height: 120px;
+		height: auto !important;
 		resize: vertical;
 	}
 

@@ -142,6 +142,7 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 								onChange={(e) => setQuestion(e.target.value)}
 								className="form-control question-form-textarea"
 								placeholder="What would you like to know about your data?"
+								rows={3}
 							/>
 							<label
 								htmlFor="question-textarea"
