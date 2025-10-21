@@ -4,7 +4,7 @@ using ExcelAnalysisAI.AzureOpenAI.Pricings;
 using Microsoft.SemanticKernel;
 using OpenAI.Chat;
 
-namespace ExcelAnalysisAI.AzureOpenAI.Costs;
+namespace ExcelAnalysisAI.AzureOpenAI.SemanticKernel.Costs;
 
 public static class OpenAIModelCostsCalculator
 {

@@ -1,7 +1,7 @@
 ﻿using AzureExcelChat.Console.Utility;
-using ExcelAnalysisAI.AzureOpenAI.Costs;
 using ExcelAnalysisAI.AzureOpenAI.Models;
 using ExcelAnalysisAI.AzureOpenAI.Pricing;
+using ExcelAnalysisAI.AzureOpenAI.SemanticKernel.Costs;
 using ExcelAnalysisAI.Core.Utility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
