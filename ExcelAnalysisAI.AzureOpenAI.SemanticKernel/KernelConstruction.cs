@@ -1,6 +1,6 @@
 ﻿using Microsoft.SemanticKernel;
 
-namespace AzureExcelChat.Console.Utility;
+namespace ExcelAnalysisAI.AzureOpenAI.SemanticKernel;
 
 public static class KernelConstruction
 {

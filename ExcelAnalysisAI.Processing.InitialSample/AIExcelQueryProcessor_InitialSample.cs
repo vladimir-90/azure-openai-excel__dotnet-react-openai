@@ -1,6 +1,6 @@
-﻿using AzureExcelChat.Console.Utility;
-using ExcelAnalysisAI.AzureOpenAI.Configuration;
+﻿using ExcelAnalysisAI.AzureOpenAI.Configuration;
 using ExcelAnalysisAI.AzureOpenAI.Models;
+using ExcelAnalysisAI.AzureOpenAI.SemanticKernel;
 using ExcelAnalysisAI.Core.Utility;
 using ExcelAnalysisAI.Processing.Core;
 using ExcelAnalysisAI.Processing.Core.Contracts;
