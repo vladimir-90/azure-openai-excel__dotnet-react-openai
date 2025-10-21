@@ -91,9 +91,6 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 								🤖 AI Model
 							</label>
 						</div>
-
-						{/* Pricing Display */}
-						<AiModelPricing selectedModel={selectedModelData} />
 					</div>
 
 					{/* Dataset Selection */}
@@ -125,8 +122,13 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 						</div>
 					</div>
 
+					{/* Pricing Display */}
+					<div className="col-12 m-0">
+						<AiModelPricing selectedModel={selectedModelData} />
+					</div>
+
 					{/* Dataset Information Display */}
-					<div className="col-12">
+					<div className="col-12 m-0">
 						<DatasetInfo
 							datasetInfo={datasetInfo}
 							loading={loadingDataset}

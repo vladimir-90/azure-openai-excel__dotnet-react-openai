@@ -14,26 +14,26 @@ function AiModelPricing({ selectedModel }: AiModelPricingProps) {
 	}
 
 	return (
-		<div className="mt-2 p-3 bg-light rounded-3 border">
-			<div className="row text-center">
-				<div className="col-12 mb-2">
-					<small className="text-muted fw-semibold">
-						💰 Pricing (per 1M tokens)
-					</small>
+		<div className="mt-2 p-2 bg-light rounded border">
+			<div className="row text-center align-items-center">
+				<div className="col-3">
+					<small className="text-muted fw-semibold">💰 Pricing</small>
+					<br />
+					<small className="text-muted">per 1M tokens</small>
 				</div>
-				<div className="col-4">
+				<div className="col-3">
 					<div className="text-success fw-bold">
 						{formatPrice(selectedModel.pricing.input)}
 					</div>
 					<small className="text-muted">Input</small>
 				</div>
-				<div className="col-4">
+				<div className="col-3">
 					<div className="text-info fw-bold">
 						{formatPrice(selectedModel.pricing.cachedInput)}
 					</div>
 					<small className="text-muted">Cached</small>
 				</div>
-				<div className="col-4">
+				<div className="col-3">
 					<div className="text-warning fw-bold">
 						{formatPrice(selectedModel.pricing.output)}
 					</div>
