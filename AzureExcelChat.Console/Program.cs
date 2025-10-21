@@ -20,18 +20,12 @@ var queryProcessingSvc = new AIExcelQueryProcessor_InitialSample(new()
 
 var excelFileInfo = new ExcelFileInfo
 {
-    FilePath = Path.Combine(Directory.GetCurrentDirectory(), "data\\employees-10.xlsx"),
+    FilePath = Path.Combine(Directory.GetCurrentDirectory(), "Data\\employees-10.xlsx"),
     Schema = await File.ReadAllTextAsync(
-        Path.Combine(Directory.GetCurrentDirectory(), "data\\employees-10__schema.txt")
+        Path.Combine(Directory.GetCurrentDirectory(), "Data\\employees-10__schema.txt")
     ),
     WorksheetName = "Employees"
 };
-
-Console.WriteLine("Azure Excel Chat");
-Console.WriteLine("════════════════════════════════════════");
-Console.WriteLine("Chat with your Excel files using natural language powered by Azure OpenAI!");
-Console.WriteLine("Type 'exit' to quit.");
-Console.WriteLine("════════════════════════════════════════");
 
 while (true)
 {

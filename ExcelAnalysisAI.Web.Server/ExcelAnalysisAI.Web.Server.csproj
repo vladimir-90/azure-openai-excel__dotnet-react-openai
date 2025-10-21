@@ -7,7 +7,6 @@
     <SpaRoot>..\excelanalysisai.web.client</SpaRoot>
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:62470</SpaProxyServerUrl>
-    <UserSecretsId>azure-excel-chat-secrets</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
