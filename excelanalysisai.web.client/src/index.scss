@@ -1,0 +1,50 @@
+// Variables for consistent theming
+$gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$background-light: #f5f5f5;
+$border-dark: #000;
+$button-disabled: #6c757d;
+
+// Minimal global styles: keep background and card border to match sketch
+body {
+	background-color: $background-light;
+}
+
+// Make the bootstrap card visually similar to the original sketch
+.card {
+	border: 2px solid $border-dark;
+}
+
+// QuestionForm specific styles with nesting
+.question-form {
+	&-card {
+		max-width: 650px;
+		min-width: 450px;
+	}
+
+	&-header {
+		background: $gradient-primary;
+	}
+
+	&-select {
+		height: 60px;
+	}
+
+	&-textarea {
+		height: 120px;
+		resize: vertical;
+	}
+
+	&-button {
+		border: none;
+		border-radius: 25px;
+		transition: all 0.3s ease;
+
+		&-enabled {
+			background: $gradient-primary;
+		}
+
+		&-disabled {
+			background: $button-disabled;
+		}
+	}
+}
