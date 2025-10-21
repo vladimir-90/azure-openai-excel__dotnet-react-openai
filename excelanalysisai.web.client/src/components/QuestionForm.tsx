@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import type { AIModelDto } from '../services/generation-settings.service';
 
 interface QuestionFormProps {
-	aiModels: string[];
+	aiModels: AIModelDto[];
 	testDataSets: string[];
 }
 
@@ -42,8 +43,11 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 									Choose model...
 								</option>
 								{aiModels.map((model) => (
-									<option key={model} value={model}>
-										{model}
+									<option
+										key={model.modelType}
+										value={model.modelType}
+									>
+										{model.label}
 									</option>
 								))}
 							</select>

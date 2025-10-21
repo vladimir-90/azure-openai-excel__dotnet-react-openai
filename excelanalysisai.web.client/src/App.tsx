@@ -2,12 +2,13 @@ import {
 	getAvailableAiModels,
 	getTestDataSets,
 } from './services/generation-settings.service';
+import type { AIModelDto } from './services/generation-settings.service';
 import { useEffect, useState } from 'react';
 
 import QuestionForm from './components/QuestionForm';
 
 function App() {
-	const [aiModels, setAiModels] = useState<string[]>([]);
+	const [aiModels, setAiModels] = useState<AIModelDto[]>([]);
 	const [testDataSets, setTestDataSets] = useState<string[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 
