@@ -18,11 +18,11 @@ public class OpenAIModelPricing
         },
         {
             OpenAIModelType.GPT_41_mini,
-            new OpenAIModelPricing{ Input = 0.40m, CachedInput = 0.10m, Output =  1.60m}
+            new OpenAIModelPricing{ Input = 0.40m, CachedInput = 0.10m, Output = 1.60m}
         },
         {
             OpenAIModelType.GPT_41,
-            new OpenAIModelPricing{ Input = 0.40m, CachedInput = 0.10m, Output =  8}
+            new OpenAIModelPricing{ Input = 2, CachedInput = 0.50m, Output = 8}
         },
         {
             OpenAIModelType.GPT_5_nano,
@@ -30,19 +30,19 @@ public class OpenAIModelPricing
         },
         {
             OpenAIModelType.GPT_5_mini,
-            new OpenAIModelPricing{ Input = 0.40m, CachedInput = 0.10m, Output = 2 }
+            new OpenAIModelPricing{ Input = 0.25m, CachedInput = 0.03m, Output = 2 }
         },
         {
             OpenAIModelType.GPT_5_chat,
-            new OpenAIModelPricing{ Input = 0.40m, CachedInput = 0.10m, Output = 10 }
+            new OpenAIModelPricing{ Input = 1.25m, CachedInput = 0.13m, Output = 10 }
         },
         {
             OpenAIModelType.GPT_o3_mini,
-            new OpenAIModelPricing{ Input = 0.40m, CachedInput = 0.10m, Output = 1.60m}
+            new OpenAIModelPricing{ Input = 1.10m, CachedInput = 0.55m, Output = 4.40m}
         },
         {
             OpenAIModelType.GPT_o4_mini,
-            new OpenAIModelPricing{ Input = 0.40m, CachedInput = 0.10m, Output = 1.60m}
+            new OpenAIModelPricing{ Input = 1.10m, CachedInput = 0.28m, Output = 4.40m}
         },
     };
 
