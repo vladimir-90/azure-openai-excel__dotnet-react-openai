@@ -48,3 +48,9 @@ body {
 		}
 	}
 }
+
+// Dataset info component styles
+.rotate-90 {
+	transform: rotate(90deg);
+	transition: transform 0.2s ease;
+}

@@ -1,6 +1,11 @@
-import { useState } from 'react';
-import type { AIModelDto } from '../services/generation-settings.service';
+import { useState, useEffect } from 'react';
+import type {
+	AIModelDto,
+	DataSetInfoDto,
+} from '../services/generation-settings.service';
+import { getTestDataset } from '../services/generation-settings.service';
 import AiModelPricing from './AiModelPricing';
+import DatasetInfo from './DatasetInfo';
 
 interface QuestionFormProps {
 	aiModels: AIModelDto[];
@@ -11,10 +16,33 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 	const [selectedModel, setSelectedModel] = useState<string>('');
 	const [selectedDataSet, setSelectedDataSet] = useState<string>('');
 	const [question, setQuestion] = useState<string>('');
+	const [datasetInfo, setDatasetInfo] = useState<DataSetInfoDto | null>(null);
+	const [loadingDataset, setLoadingDataset] = useState<boolean>(false);
 
 	const selectedModelData = aiModels.find(
 		(model) => model.modelType === selectedModel
 	);
+
+	// Load dataset info when dataset is selected
+	useEffect(() => {
+		if (selectedDataSet) {
+			setLoadingDataset(true);
+			setDatasetInfo(null);
+
+			getTestDataset(selectedDataSet)
+				.then((info) => {
+					setDatasetInfo(info);
+				})
+				.catch((error) => {
+					console.error('Failed to load dataset info:', error);
+				})
+				.finally(() => {
+					setLoadingDataset(false);
+				});
+		} else {
+			setDatasetInfo(null);
+		}
+	}, [selectedDataSet]);
 
 	const handleGoClick = () => {
 		// to_do
@@ -95,6 +123,14 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 								📊 Dataset
 							</label>
 						</div>
+					</div>
+
+					{/* Dataset Information Display */}
+					<div className="col-12">
+						<DatasetInfo
+							datasetInfo={datasetInfo}
+							loading={loadingDataset}
+						/>
 					</div>
 
 					{/* Question Input */}
