@@ -31,14 +31,20 @@ function App() {
 
 	if (loading) {
 		return (
-			<div className="app-container">
-				<div className="loading">Loading...</div>
+			<div
+				className="container d-flex justify-content-center align-items-center"
+				style={{ minHeight: '100vh' }}
+			>
+				<div className="p-3">Loading...</div>
 			</div>
 		);
 	}
 
 	return (
-		<div className="app-container">
+		<div
+			className="container d-flex justify-content-center align-items-center"
+			style={{ minHeight: '100vh' }}
+		>
 			<QuestionForm aiModels={aiModels} testDataSets={testDataSets} />
 		</div>
 	);

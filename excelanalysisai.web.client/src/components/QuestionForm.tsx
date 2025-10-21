@@ -19,9 +19,11 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 	};
 
 	return (
-		<div className="form-container">
-			<div className="form-group">
-				<label htmlFor="model-select">Pick a model</label>
+		<div className="card p-4" style={{ maxWidth: 600, minWidth: 400 }}>
+			<div className="mb-3">
+				<label htmlFor="model-select" className="form-label">
+					Pick a model
+				</label>
 				<select
 					id="model-select"
 					value={selectedModel}
@@ -36,8 +38,10 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 				</select>
 			</div>
 
-			<div className="form-group">
-				<label htmlFor="dataset-select">Pick a file for analysis</label>
+			<div className="mb-3">
+				<label htmlFor="dataset-select" className="form-label">
+					Pick a file for analysis
+				</label>
 				<select
 					id="dataset-select"
 					value={selectedDataSet}
@@ -52,22 +56,24 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 				</select>
 			</div>
 
-			<div className="form-group">
-				<label htmlFor="question-textarea">Your question</label>
+			<div className="mb-3">
+				<label htmlFor="question-textarea" className="form-label">
+					Your question
+				</label>
 				<textarea
 					id="question-textarea"
 					value={question}
 					onChange={(e) => setQuestion(e.target.value)}
-					className="form-textarea"
+					className="form-control"
 					placeholder="Enter your question here..."
 					rows={4}
 				/>
 			</div>
 
-			<div className="form-group">
+			<div className="d-flex justify-content-end">
 				<button
 					onClick={handleGoClick}
-					className="go-button"
+					className="btn btn-primary"
 					disabled={!selectedModel || !selectedDataSet}
 				>
 					Go
