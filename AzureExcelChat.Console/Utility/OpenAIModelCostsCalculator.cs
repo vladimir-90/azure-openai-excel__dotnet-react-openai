@@ -13,13 +13,37 @@ internal static class OpenAIModelCostsCalculator
     private static readonly Dictionary<OpenAIModelType, OpenAIModelPricing> _pricings = new()
     {
         {
+            OpenAIModelType.GPT_41_nano,
+            new OpenAIModelPricing{ Input = 0.10m, CachedInput = 0.03m, Output = 0.40m }
+        },
+        {
+            OpenAIModelType.GPT_41_mini,
+            new OpenAIModelPricing{ Input = 0.40m, CachedInput = 0.10m, Output =  1.60m}
+        },
+        {
+            OpenAIModelType.GPT_41,
+            new OpenAIModelPricing{ Input = 0.40m, CachedInput = 0.10m, Output =  8}
+        },
+        {
             OpenAIModelType.GPT_5_nano,
             new OpenAIModelPricing{ Input = 0.05m, CachedInput = 0.01m, Output = 0.4m }
         },
         {
-            OpenAIModelType.GPT_41_nano,
-            new OpenAIModelPricing{ Input = 0.10m, CachedInput = 0.03m, Output = 0.40m }
-        }
+            OpenAIModelType.GPT_5_mini,
+            new OpenAIModelPricing{ Input = 0.40m, CachedInput = 0.10m, Output = 2 }
+        },
+        {
+            OpenAIModelType.GPT_5_chat,
+            new OpenAIModelPricing{ Input = 0.40m, CachedInput = 0.10m, Output = 10 }
+        },
+        {
+            OpenAIModelType.GPT_o3_mini,
+            new OpenAIModelPricing{ Input = 0.40m, CachedInput = 0.10m, Output = 1.60m}
+        },
+        {
+            OpenAIModelType.GPT_o4_mini,
+            new OpenAIModelPricing{ Input = 0.40m, CachedInput = 0.10m, Output = 1.60m}
+        },
     };
 
     public static decimal CalculateCost(FunctionResult requestResult, OpenAIModelType modelType)
