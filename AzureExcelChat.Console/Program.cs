@@ -1,6 +1,7 @@
 ﻿using AzureExcelChat.Console.InitialSample;
 using AzureExcelChat.Console.Utility;
 using ExcelAnalysisAI.AzureOpenAI.Models;
+using ExcelAnalysisAI.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 
 var config = new ConfigurationBuilder()
@@ -29,7 +30,7 @@ while (true)
 {
     Console.Write("\n>>>>>> Your question: ");
     string userInput = Console.ReadLine() ?? "";
-    if (string.IsNullOrWhiteSpace(userInput))
+    if (!userInput.Valuable())
         continue;
     if (userInput.Equals("exit", StringComparison.OrdinalIgnoreCase))
         break;
