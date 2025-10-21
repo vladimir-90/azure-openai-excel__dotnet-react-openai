@@ -9,11 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.10" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="9.0.10" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.10" />
-    <PackageReference Include="Microsoft.SemanticKernel" Version="1.66.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +19,7 @@
     <ProjectReference Include="..\ExcelAnalysisAI.AzureOpenAI\ExcelAnalysisAI.AzureOpenAI.csproj" />
     <ProjectReference Include="..\ExcelAnalysisAI.Core\ExcelAnalysisAI.Core.csproj" />
     <ProjectReference Include="..\ExcelAnalysisAI.Processing.Core\ExcelAnalysisAI.Processing.Core.csproj" />
+    <ProjectReference Include="..\ExcelAnalysisAI.Processing.InitialSample\ExcelAnalysisAI.Processing.InitialSample.csproj" />
   </ItemGroup>
 
   <ItemGroup>

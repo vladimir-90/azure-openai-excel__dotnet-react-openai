@@ -1,4 +1,4 @@
-﻿namespace AzureExcelChat.Console.InitialSample;
+﻿namespace ExcelAnalysisAI.Processing.InitialSample.Constants;
 
 internal static class Prompts
 {

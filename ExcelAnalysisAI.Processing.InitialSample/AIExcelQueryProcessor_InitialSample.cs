@@ -4,18 +4,21 @@ using ExcelAnalysisAI.AzureOpenAI.SemanticKernel.Costs;
 using ExcelAnalysisAI.Core.Utility;
 using ExcelAnalysisAI.Processing.Core;
 using ExcelAnalysisAI.Processing.Core.Contracts;
+using ExcelAnalysisAI.Processing.InitialSample.Constants;
+using ExcelAnalysisAI.Processing.InitialSample.Handling;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 
-namespace AzureExcelChat.Console.InitialSample;
+namespace ExcelAnalysisAI.Processing.InitialSample;
 
-internal class QueryProcessingService : IAIExcelQueryProcessor
+public class AIExcelQueryProcessor_InitialSample : IAIExcelQueryProcessor
 {
     private readonly Kernel _kernel;
     private readonly KernelFunction fn_getQueryDescription;
     private readonly KernelFunction fn_getAnswer;
     private readonly OpenAIModelType _openAIModelType;
-    public QueryProcessingService(IConfiguration configuration, OpenAIModelType openAIModelType)
+    // TO_DO: inputs parameters as typed model
+    public AIExcelQueryProcessor_InitialSample(IConfiguration configuration, OpenAIModelType openAIModelType)
     {
         _kernel = KernelConstruction.Create(
             configuration["AZURE_OPENAI_ENDPOINT"]!,
@@ -80,6 +83,7 @@ internal class QueryProcessingService : IAIExcelQueryProcessor
         return results;
     }
 
+    // to_do: extension-method
     private AIRequestResponseInfo GetRequestInfo(FunctionResult fnResult) => new()
     {
         Request = fnResult.RenderedPrompt!,

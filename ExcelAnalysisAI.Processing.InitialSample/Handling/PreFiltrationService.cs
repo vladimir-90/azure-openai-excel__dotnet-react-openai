@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace AzureExcelChat.Console.InitialSample;
+namespace ExcelAnalysisAI.Processing.InitialSample.Handling;
 
 internal static class PreFiltrationService
 {
@@ -155,5 +155,4 @@ internal static class PreFiltrationService
 
         return result;
     }
-
 }

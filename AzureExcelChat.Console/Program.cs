@@ -1,8 +1,8 @@
-﻿using AzureExcelChat.Console.InitialSample;
-using ExcelAnalysisAI.AzureOpenAI.Models;
+﻿using ExcelAnalysisAI.AzureOpenAI.Models;
 using ExcelAnalysisAI.AzureOpenAI.Pricing;
 using ExcelAnalysisAI.Core.Extensions;
 using ExcelAnalysisAI.Processing.Core.Contracts;
+using ExcelAnalysisAI.Processing.InitialSample;
 using Microsoft.Extensions.Configuration;
 
 var config = new ConfigurationBuilder()
@@ -10,7 +10,7 @@ var config = new ConfigurationBuilder()
     .AddEnvironmentVariables()
     .Build();
 
-var queryProcessingSvc = new QueryProcessingService(config, OpenAIModelType.GPT_41_nano);
+var queryProcessingSvc = new AIExcelQueryProcessor_InitialSample(config, OpenAIModelType.GPT_41_nano);
 
 var excelFileInfo = new ExcelFileInfo
 {

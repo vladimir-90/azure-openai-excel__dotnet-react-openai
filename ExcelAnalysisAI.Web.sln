@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelAnalysisAI.AzureOpenAI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelAnalysisAI.Processing.Core", "ExcelAnalysisAI.Processing.Core\ExcelAnalysisAI.Processing.Core.csproj", "{891A6C63-1908-42AE-B049-858B0F7F511A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelAnalysisAI.Processing.InitialSample", "ExcelAnalysisAI.Processing.InitialSample\ExcelAnalysisAI.Processing.InitialSample.csproj", "{486DE195-0B42-4429-80DD-2E7EAEC39045}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +135,18 @@ Global
 		{891A6C63-1908-42AE-B049-858B0F7F511A}.Release|x64.Build.0 = Release|Any CPU
 		{891A6C63-1908-42AE-B049-858B0F7F511A}.Release|x86.ActiveCfg = Release|Any CPU
 		{891A6C63-1908-42AE-B049-858B0F7F511A}.Release|x86.Build.0 = Release|Any CPU
+		{486DE195-0B42-4429-80DD-2E7EAEC39045}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{486DE195-0B42-4429-80DD-2E7EAEC39045}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{486DE195-0B42-4429-80DD-2E7EAEC39045}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{486DE195-0B42-4429-80DD-2E7EAEC39045}.Debug|x64.Build.0 = Debug|Any CPU
+		{486DE195-0B42-4429-80DD-2E7EAEC39045}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{486DE195-0B42-4429-80DD-2E7EAEC39045}.Debug|x86.Build.0 = Debug|Any CPU
+		{486DE195-0B42-4429-80DD-2E7EAEC39045}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{486DE195-0B42-4429-80DD-2E7EAEC39045}.Release|Any CPU.Build.0 = Release|Any CPU
+		{486DE195-0B42-4429-80DD-2E7EAEC39045}.Release|x64.ActiveCfg = Release|Any CPU
+		{486DE195-0B42-4429-80DD-2E7EAEC39045}.Release|x64.Build.0 = Release|Any CPU
+		{486DE195-0B42-4429-80DD-2E7EAEC39045}.Release|x86.ActiveCfg = Release|Any CPU
+		{486DE195-0B42-4429-80DD-2E7EAEC39045}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -148,6 +162,7 @@ Global
 		{9D37520C-849C-48B4-A7F4-5EA99FF9B54D} = {C4FDA586-14B4-4E42-92B2-297ECC7BC729}
 		{58F31B37-4D59-429D-AC63-1A5BA8897BBC} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{891A6C63-1908-42AE-B049-858B0F7F511A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{486DE195-0B42-4429-80DD-2E7EAEC39045} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AE980552-645C-4D68-901E-6656CF0D5670}
