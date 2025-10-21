@@ -46,8 +46,8 @@ public class GenerationSettingsController(IWebHostEnvironment _env) : Controller
         {
             Name = datasetName,
             Schema = schema,
-            DataSlice = data.Take(5).ToList(),
-            TotalEntityCount = data.Count
+            DataSlice = data.Take(6).ToList(),      // 1st row are headings
+            TotalEntityCount = data.Count - 1       // 1st row are headings
         });
     }
 }
