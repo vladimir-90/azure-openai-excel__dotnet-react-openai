@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { AIModelDto } from '../services/generation-settings.service';
+import AiModelPricing from './AiModelPricing';
 
 interface QuestionFormProps {
 	aiModels: AIModelDto[];
@@ -10,6 +11,10 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 	const [selectedModel, setSelectedModel] = useState<string>('');
 	const [selectedDataSet, setSelectedDataSet] = useState<string>('');
 	const [question, setQuestion] = useState<string>('');
+
+	const selectedModelData = aiModels.find(
+		(model) => model.modelType === selectedModel
+	);
 
 	const handleGoClick = () => {
 		// to_do
@@ -58,6 +63,9 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 								🤖 AI Model
 							</label>
 						</div>
+
+						{/* Pricing Display */}
+						<AiModelPricing selectedModel={selectedModelData} />
 					</div>
 
 					{/* Dataset Selection */}
