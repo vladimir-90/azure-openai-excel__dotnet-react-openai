@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ExcelAnalysisAI.AzureOpenAI\ExcelAnalysisAI.AzureOpenAI.csproj" />
+    <ProjectReference Include="..\ExcelAnalysisAI.Core\ExcelAnalysisAI.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

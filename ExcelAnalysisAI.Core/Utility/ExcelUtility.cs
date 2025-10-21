@@ -1,8 +1,8 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 
-namespace AzureExcelChat.Console.Utility;
+namespace ExcelAnalysisAI.Core.Utility;
 
-internal static class ExcelUtility
+public static class ExcelUtility
 {
     public static List<List<object>> ReadWorksheet(string filePath, string worksheetName)
     {
