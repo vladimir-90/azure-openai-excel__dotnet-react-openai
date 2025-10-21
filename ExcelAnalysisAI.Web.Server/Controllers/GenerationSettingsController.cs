@@ -12,7 +12,7 @@ public class GenerationSettingsController(IWebHostEnvironment _env) : Controller
     {
         var modelTypes = (OpenAIModelType[])Enum.GetValues(typeof(OpenAIModelType));
         var options = modelTypes!.Select(x => x.ToString()).ToArray();
-        return Ok();
+        return Ok(options);
     }
 
     [HttpGet("test-data-sets")]
