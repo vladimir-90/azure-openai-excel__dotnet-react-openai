@@ -1,6 +1,7 @@
 ﻿using AzureExcelChat.Console.Utility;
 using ExcelAnalysisAI.AzureOpenAI.Costs;
 using ExcelAnalysisAI.AzureOpenAI.Models;
+using ExcelAnalysisAI.AzureOpenAI.Pricing;
 using ExcelAnalysisAI.Core.Utility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
@@ -95,7 +96,7 @@ internal class QueryProcessingResult
     {
         public required string? Request { get; init; }
         public required string Response { get; init; }
-        public required QueryDetailedCost? Costs { get; init; }
+        public required OpenAIQueryCost? Costs { get; init; }
         public bool IsSynthetic { get; init; } = false;
     }
 }

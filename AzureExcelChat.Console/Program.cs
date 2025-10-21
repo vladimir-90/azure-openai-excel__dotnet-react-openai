@@ -1,6 +1,6 @@
 ﻿using AzureExcelChat.Console.InitialSample;
-using ExcelAnalysisAI.AzureOpenAI.Costs;
 using ExcelAnalysisAI.AzureOpenAI.Models;
+using ExcelAnalysisAI.AzureOpenAI.Pricing;
 using ExcelAnalysisAI.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 
@@ -64,7 +64,7 @@ $@"
         }
     }
 
-    var summ = new QueryDetailedCost
+    var summ = new OpenAIQueryCost
     {
         InputTokenCount = result.Requests.Where(r => !r.IsSynthetic).Sum(r => r.Costs!.InputTokenCount),
         OutputTokenCount = result.Requests.Where(r => !r.IsSynthetic).Sum(r => r.Costs!.OutputTokenCount),

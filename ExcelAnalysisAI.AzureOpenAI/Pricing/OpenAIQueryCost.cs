@@ -1,6 +1,6 @@
-﻿namespace ExcelAnalysisAI.AzureOpenAI.Costs;
+﻿namespace ExcelAnalysisAI.AzureOpenAI.Pricing;
 
-public class QueryDetailedCost
+public class OpenAIQueryCost
 {
     public int InputTokenCount { get; set; }
     public int OutputTokenCount { get; set; }

@@ -1,4 +1,5 @@
 ﻿using ExcelAnalysisAI.AzureOpenAI.Models;
+using ExcelAnalysisAI.AzureOpenAI.Pricing;
 using ExcelAnalysisAI.AzureOpenAI.Pricings;
 using Microsoft.SemanticKernel;
 using OpenAI.Chat;
@@ -21,7 +22,7 @@ public static class OpenAIModelCostsCalculator
         return -1;
     }
 
-    public static QueryDetailedCost? CalculateDetailedCost(FunctionResult requestResult, OpenAIModelType modelType)
+    public static OpenAIQueryCost? CalculateDetailedCost(FunctionResult requestResult, OpenAIModelType modelType)
     {
         var modelPricing = OpenAIModelPricing.ForModel(modelType);
 
@@ -30,7 +31,7 @@ public static class OpenAIModelCostsCalculator
             decimal cost = usage.InputTokenCount * modelPricing.Input / 1000000
                 + usage.OutputTokenCount * modelPricing.Output / 1000000;
 
-            return new QueryDetailedCost
+            return new OpenAIQueryCost
             {
                 InputTokenCount = usage.InputTokenCount,
                 OutputTokenCount = usage.OutputTokenCount,
@@ -40,5 +41,4 @@ public static class OpenAIModelCostsCalculator
 
         return null;
     }
-
 }
