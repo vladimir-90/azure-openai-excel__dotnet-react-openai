@@ -18,20 +18,22 @@ public class AIModelConfig
 
 public static class AzureOpenAIConfigExtensions
 {
-    public static AIModelConfiguration GetModelConfig(this AzureOpenAIConfig openAI,
+    public static AIModelConfiguration? GetModelConfig(this AzureOpenAIConfig openAI,
         OpenAIModelType modelType)
     {
-        var model = openAI.Models.First(x => x.ModelType == modelType);
-        return new AIModelConfiguration
-        {
-            Type = model.ModelType,
-            Endpoint = openAI.Endpoint,
-            ApiKey = openAI.ApiKey,
-            DeploymentName = model.DeploymentName
-        };
+        var model = openAI.Models.FirstOrDefault(x => x.ModelType == modelType);
+        return model != null
+            ? new AIModelConfiguration
+            {
+                Type = model.ModelType,
+                Endpoint = openAI.Endpoint,
+                ApiKey = openAI.ApiKey,
+                DeploymentName = model.DeploymentName
+            }
+            : null;
     }
 
-    public static AIModelConfiguration GetModelConfig(this List<AzureOpenAIConfig> openAIConfigs,
+    public static AIModelConfiguration? GetModelConfig(this List<AzureOpenAIConfig> openAIConfigs,
         OpenAIModelType modelType)
     {
         foreach (var openAI in openAIConfigs)
@@ -41,6 +43,6 @@ public static class AzureOpenAIConfigExtensions
                 return model;
         }
 
-        throw new NotSupportedException($"'{modelType}' configuration is absent");
+        return null;
     }
 }

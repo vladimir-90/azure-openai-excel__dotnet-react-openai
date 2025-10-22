@@ -14,6 +14,9 @@ public class ExcelAnalysisController(IWebHostEnvironment _env, List<AzureOpenAIC
     public async Task<IActionResult> ExecuteExcelQuery([FromBody] ExcelAnalysisQueryDto dto)
     {
         var aiModelConfig = _openAIConfigs.GetModelConfig(dto.ModelType);
+        if (aiModelConfig is null)
+            throw new NotSupportedException($"'{dto.ModelType}' configuration is absent");
+
         var queryProcessor = new AIExcelQueryProcessor_InitialSample(aiModelConfig);
 
         var dirPath = Path.Combine(_env.ContentRootPath, "Data", dto.DatasetName);
