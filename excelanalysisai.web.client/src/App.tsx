@@ -16,7 +16,6 @@ import AIAnalysisResult from './components/AnalysisResult';
 function App() {
 	const [aiModels, setAiModels] = useState<AIModelDto[]>([]);
 	const [testDataSets, setTestDataSets] = useState<string[]>([]);
-	const [loading, setLoading] = useState<boolean>(true);
 	const [analysisResult, setAnalysisResult] = useState<AIQueryResult | null>(
 		null
 	);
@@ -27,17 +26,8 @@ function App() {
 	}, []);
 
 	const loadData = async () => {
-		setLoading(true);
-
-		const [models, dataSets] = await Promise.all([
-			getAvailableAiModels(),
-			getTestDataSets(),
-		]);
-
-		setAiModels(models);
-		setTestDataSets(dataSets);
-
-		setLoading(false);
+		getAvailableAiModels().then((models) => setAiModels(models));
+		getTestDataSets().then((dataSets) => setTestDataSets(dataSets));
 	};
 
 	const handleAnalyze = async (queryData: ExcelAnalysisQueryDto) => {
@@ -52,17 +42,6 @@ function App() {
 			setAnalyzing(false);
 		}
 	};
-
-	if (loading) {
-		return (
-			<div
-				className="container d-flex justify-content-center align-items-center"
-				style={{ minHeight: '100vh' }}
-			>
-				<div className="p-3">Loading...</div>
-			</div>
-		);
-	}
 
 	if (analyzing) {
 		return (
