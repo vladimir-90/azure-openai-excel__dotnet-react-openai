@@ -3,6 +3,7 @@ import { useToastStore } from '../../stores/toastStore';
 function Toast() {
 	const toasts = useToastStore((state) => state.toasts);
 	const removeToast = useToastStore((state) => state.removeToast);
+	const prolongToast = useToastStore((state) => state.prolongToast);
 
 	return (
 		<div className="toast-container">
@@ -10,6 +11,8 @@ function Toast() {
 				<div
 					key={toast.id}
 					className={`toast-notification toast-${toast.type}`}
+					onClick={() => prolongToast(toast.id)}
+					style={{ cursor: 'pointer' }}
 				>
 					<div className="toast-content">
 						{/* <span className="toast-icon">
@@ -21,7 +24,10 @@ function Toast() {
 					</div>
 					<button
 						className="toast-close"
-						onClick={() => removeToast(toast.id)}
+						onClick={(e) => {
+							e.stopPropagation();
+							removeToast(toast.id);
+						}}
 						aria-label="Close notification"
 					>
 						✕

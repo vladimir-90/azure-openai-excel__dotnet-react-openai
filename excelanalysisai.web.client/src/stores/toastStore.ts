@@ -12,13 +12,14 @@ interface ToastState {
 	toasts: Toast[];
 	showToast: (message: string, type: ToastType, duration?: number) => string;
 	removeToast: (id: string) => void;
+	prolongToast: (id: string, duration?: number) => void;
 }
 
 const timeoutMap = new Map<string, ReturnType<typeof setTimeout>>();
 
 export const useToastStore = create<ToastState>((set) => ({
 	toasts: [],
-	showToast: (message: string, type: ToastType, duration = 5000) => {
+	showToast: (message: string, type: ToastType, duration = 10000) => {
 		const id = `${Date.now()}-${Math.random()}`;
 		const toast: Toast = { id, message, type };
 
@@ -51,5 +52,23 @@ export const useToastStore = create<ToastState>((set) => ({
 		set((state) => ({
 			toasts: state.toasts.filter((t) => t.id !== id),
 		}));
+	},
+	prolongToast: (id: string, duration = 10000) => {
+		// Cancel the existing timeout
+		const existingTimeoutId = timeoutMap.get(id);
+		if (existingTimeoutId) {
+			clearTimeout(existingTimeoutId);
+		}
+
+		// Set up a new timeout with the prolonged duration
+		const newTimeoutId = setTimeout(() => {
+			set((state) => ({
+				toasts: state.toasts.filter((t) => t.id !== id),
+			}));
+			timeoutMap.delete(id);
+		}, duration);
+
+		// Store the new timeout
+		timeoutMap.set(id, newTimeoutId);
 	},
 }));
