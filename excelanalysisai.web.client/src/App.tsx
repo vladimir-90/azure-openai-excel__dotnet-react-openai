@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 
 import QuestionForm from './components/QuestionForm';
 import AIAnalysisResult from './components/AnalysisResult';
+import Toast from './components/base/Toast';
 
 function App() {
 	const [aiModels, setAiModels] = useState<AIModelDto[]>([]);
@@ -20,6 +21,7 @@ function App() {
 		null
 	);
 	const [analyzing, setAnalyzing] = useState<boolean>(false);
+	const [toastMessage, setToastMessage] = useState<string | null>(null);
 
 	useEffect(() => {
 		getAvailableAiModels().then((models) => setAiModels(models));
@@ -32,8 +34,11 @@ function App() {
 			const result = await executeExcelQuery(queryData);
 			setAnalysisResult(result);
 		} catch (error) {
-			console.error('Analysis failed:', error);
-			// Handle error - could set error state here
+			let errorMessage = 'Analysis failed. Please try again.';
+			if (error instanceof Error && !!error.message) {
+				errorMessage = error.message;
+			}
+			setToastMessage(errorMessage);
 		} finally {
 			setAnalyzing(false);
 		}
@@ -48,6 +53,13 @@ function App() {
 			className="container d-flex justify-content-center align-items-center"
 			style={{ minHeight: '100vh' }}
 		>
+			{toastMessage && (
+				<Toast
+					message={toastMessage}
+					type="error"
+					onClose={() => setToastMessage(null)}
+				/>
+			)}
 			<QuestionForm
 				aiModels={aiModels}
 				testDataSets={testDataSets}

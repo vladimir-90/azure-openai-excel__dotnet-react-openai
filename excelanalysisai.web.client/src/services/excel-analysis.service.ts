@@ -41,7 +41,10 @@ export async function executeExcelQuery(
 		});
 
 		if (!response.ok) {
-			throw new Error(`HTTP error! status: ${response.status}`);
+			const errorBody = await response.text();
+			throw new Error(
+				errorBody || `HTTP error! status: ${response.status}`
+			);
 		}
 
 		const result: AIQueryResult = await response.json();

@@ -20,6 +20,116 @@ body {
 	z-index: 1000;
 }
 
+// Toast notification styling
+.toast-notification {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	padding: 16px 20px;
+	border-radius: 12px;
+	display: flex;
+	justify-content: space-between;
+	gap: 16px;
+	z-index: 9999;
+	animation: slideIn 0.3s ease-out;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+	max-width: 600px;
+	max-height: 300px;
+	overflow-x: hidden;
+	border-left: 4px solid;
+
+	&.toast-error {
+		background-color: #fff5f5;
+		color: #c53030;
+		border-left-color: #f56565;
+	}
+
+	&.toast-success {
+		background-color: #f0fdf4;
+		color: #15803d;
+		border-left-color: #22c55e;
+	}
+
+	&.toast-info {
+		background-color: #f0f9ff;
+		color: #0369a1;
+		border-left-color: #0ea5e9;
+	}
+
+	.toast-content {
+		display: flex;
+		gap: 12px;
+		flex: 1;
+	}
+
+	.toast-icon {
+		font-size: 20px;
+		flex-shrink: 0;
+	}
+
+	.toast-message {
+		white-space: pre;
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 1.5;
+		overflow-y: auto;
+		max-height: 368px;
+
+		/* Custom scrollbar for webkit browsers */
+		&::-webkit-scrollbar {
+			width: 6px;
+		}
+
+		&::-webkit-scrollbar-track {
+			background: transparent;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background-color: #d1d5db;
+			border-radius: 3px;
+
+			&:hover {
+				background-color: #9ca3af;
+			}
+		}
+
+		/* Custom scrollbar for Firefox */
+		scrollbar-color: #d1d5db transparent;
+		scrollbar-width: thin;
+	}
+
+	.toast-close {
+		background: none;
+		border: none;
+		color: inherit;
+		font-size: 18px;
+		cursor: pointer;
+		padding: 0;
+		flex-shrink: 0;
+		opacity: 0.6;
+		transition: opacity 0.2s ease;
+		position: absolute;
+		top: 12px;
+		right: 12px;
+		z-index: 10;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+}
+
+@keyframes slideIn {
+	from {
+		transform: translateX(400px);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
 // Make the bootstrap card visually similar to the original sketch
 .card {
 	border: 2px solid $border-dark;
