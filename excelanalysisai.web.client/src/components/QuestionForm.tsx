@@ -7,6 +7,7 @@ import { getTestDataset } from '../services/generation-settings.service';
 import type { ExcelAnalysisQueryDto } from '../services/excel-analysis.service';
 import AiModelPricing from './AiModelPricing';
 import DatasetInfo from './DatasetInfo';
+import LazySelect from './base/LazySelect';
 
 interface QuestionFormProps {
 	aiModels: AIModelDto[];
@@ -65,63 +66,32 @@ function QuestionForm({
 				<div className="row g-3">
 					{/* Model Selection */}
 					<div className="col-md-6">
-						<div className="form-floating">
-							<select
-								id="model-select"
-								value={selectedModel}
-								onChange={(e) =>
-									setSelectedModel(e.target.value)
-								}
-								className="form-select question-form-select"
-							>
-								<option value="" disabled>
-									Choose model...
-								</option>
-								{aiModels.map((model) => (
-									<option
-										key={model.modelType}
-										value={model.modelType}
-									>
-										{model.label}
-									</option>
-								))}
-							</select>
-							<label
-								htmlFor="model-select"
-								className="text-muted"
-							>
-								🤖 AI Model
-							</label>
-						</div>
+						<LazySelect
+							label="🤖 AI Model"
+							placeholder="Choose model..."
+							value={selectedModel}
+							onChange={setSelectedModel}
+							loading={aiModels.length === 0}
+							options={aiModels.map((model) => ({
+								value: model.modelType,
+								label: model.label,
+							}))}
+						/>
 					</div>
 
 					{/* Dataset Selection */}
 					<div className="col-md-6">
-						<div className="form-floating">
-							<select
-								id="dataset-select"
-								value={selectedDataSet}
-								onChange={(e) =>
-									setSelectedDataSet(e.target.value)
-								}
-								className="form-select question-form-select"
-							>
-								<option value="" disabled>
-									Choose dataset...
-								</option>
-								{testDataSets.map((dataSet) => (
-									<option key={dataSet} value={dataSet}>
-										{dataSet}
-									</option>
-								))}
-							</select>
-							<label
-								htmlFor="dataset-select"
-								className="text-muted"
-							>
-								📊 Dataset
-							</label>
-						</div>
+						<LazySelect
+							label="📊 Dataset"
+							placeholder="Choose dataset..."
+							value={selectedDataSet}
+							onChange={setSelectedDataSet}
+							loading={testDataSets.length === 0}
+							options={testDataSets.map((dataSet) => ({
+								value: dataSet,
+								label: dataSet,
+							}))}
+						/>
 					</div>
 
 					{/* Pricing Display */}
