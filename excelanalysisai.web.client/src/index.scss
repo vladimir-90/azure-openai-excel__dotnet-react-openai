@@ -48,7 +48,6 @@ body {
 	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 	max-width: 600px;
 	max-height: 300px;
-	overflow-x: hidden;
 	border-left: 4px solid;
 
 	&.toast-error {
@@ -73,6 +72,8 @@ body {
 		display: flex;
 		gap: 12px;
 		flex: 1;
+		overflow: hidden;
+		min-width: 0;
 	}
 
 	.toast-icon {
@@ -86,17 +87,20 @@ body {
 		font-weight: 500;
 		line-height: 1.5;
 		overflow-y: auto;
+		overflow-x: auto;
 		max-height: 368px;
 
-		/* Custom scrollbar for webkit browsers */
+		/* Vertical scrollbar for webkit browsers */
 		&::-webkit-scrollbar {
 			width: 6px;
+			height: 6px;
 		}
 
 		&::-webkit-scrollbar-track {
 			background: transparent;
 		}
 
+		/* Vertical scrollbar thumb */
 		&::-webkit-scrollbar-thumb {
 			background-color: #d1d5db;
 			border-radius: 3px;
@@ -104,6 +108,11 @@ body {
 			&:hover {
 				background-color: #9ca3af;
 			}
+		}
+
+		/* Horizontal scrollbar specific styling */
+		&::-webkit-scrollbar-corner {
+			background: transparent;
 		}
 
 		/* Custom scrollbar for Firefox */
