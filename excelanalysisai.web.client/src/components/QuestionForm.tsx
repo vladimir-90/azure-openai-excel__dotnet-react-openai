@@ -8,17 +8,20 @@ import type { ExcelAnalysisQueryDto } from '../services/excel-analysis.service';
 import AiModelPricing from './AiModelPricing';
 import DatasetInfo from './DatasetInfo';
 import LazySelect from './base/LazySelect';
+import Spinner from './base/Spinner';
 
 interface QuestionFormProps {
 	aiModels: AIModelDto[];
 	testDataSets: string[];
 	onAnalyze: (queryData: ExcelAnalysisQueryDto) => void;
+	showLoading?: boolean;
 }
 
 function QuestionForm({
 	aiModels,
 	testDataSets,
 	onAnalyze,
+	showLoading = false,
 }: QuestionFormProps) {
 	const [selectedModel, setSelectedModel] = useState<string>('');
 	const [selectedDataSet, setSelectedDataSet] = useState<string>('');
@@ -53,6 +56,11 @@ function QuestionForm({
 
 	return (
 		<div className="card border-0 shadow-lg question-form-card">
+			{showLoading && (
+				<div className="spinner-overlay">
+					<Spinner />
+				</div>
+			)}
 			{/* Header */}
 			<div className="card-header question-form-header text-white text-center py-3 border-0">
 				<h4 className="mb-0 fw-light">Excel Analysis AI</h4>

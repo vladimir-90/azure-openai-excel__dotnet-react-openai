@@ -9,6 +9,17 @@ body {
 	background-color: $background-light;
 }
 
+// Spinner overlay for loading states
+.spinner-overlay {
+	position: absolute;
+	inset: 0;
+	background-color: rgba(0, 0, 0, 0.05);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 1000;
+}
+
 // Make the bootstrap card visually similar to the original sketch
 .card {
 	border: 2px solid $border-dark;

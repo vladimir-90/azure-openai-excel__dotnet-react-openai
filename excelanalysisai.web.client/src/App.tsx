@@ -12,7 +12,6 @@ import { useEffect, useState } from 'react';
 
 import QuestionForm from './components/QuestionForm';
 import AIAnalysisResult from './components/AnalysisResult';
-import Spinner from './components/base/Spinner';
 
 function App() {
 	const [aiModels, setAiModels] = useState<AIModelDto[]>([]);
@@ -23,13 +22,9 @@ function App() {
 	const [analyzing, setAnalyzing] = useState<boolean>(false);
 
 	useEffect(() => {
-		loadData();
-	}, []);
-
-	const loadData = async () => {
 		getAvailableAiModels().then((models) => setAiModels(models));
 		getTestDataSets().then((dataSets) => setTestDataSets(dataSets));
-	};
+	}, []);
 
 	const handleAnalyze = async (queryData: ExcelAnalysisQueryDto) => {
 		setAnalyzing(true);
@@ -44,22 +39,6 @@ function App() {
 		}
 	};
 
-	if (analyzing) {
-		return (
-			<div
-				className="container d-flex justify-content-center align-items-center"
-				style={{ minHeight: '100vh' }}
-			>
-				<div className="p-3">
-					<div className="mb-3">
-						<Spinner />
-					</div>
-					Analyzing your data...
-				</div>
-			</div>
-		);
-	}
-
 	if (analysisResult) {
 		return <AIAnalysisResult result={analysisResult} />;
 	}
@@ -73,6 +52,7 @@ function App() {
 				aiModels={aiModels}
 				testDataSets={testDataSets}
 				onAnalyze={handleAnalyze}
+				showLoading={analyzing}
 			/>
 		</div>
 	);
