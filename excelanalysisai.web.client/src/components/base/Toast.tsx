@@ -1,22 +1,13 @@
-import { useEffect } from 'react';
+import { useToastStore } from '../../stores/toastStore';
 
-interface ToastProps {
-	message: string;
-	type?: 'error' | 'success' | 'info';
-	onClose: () => void;
-	duration?: number;
-}
+function Toast() {
+	const message = useToastStore((state) => state.message);
+	const type = useToastStore((state) => state.type);
+	const clearToast = useToastStore((state) => state.clearToast);
 
-function Toast({
-	message,
-	type = 'error',
-	onClose,
-	duration = 10000,
-}: ToastProps) {
-	useEffect(() => {
-		const timer = setTimeout(onClose, duration);
-		return () => clearTimeout(timer);
-	}, [onClose, duration]);
+	if (!message) {
+		return null;
+	}
 
 	return (
 		<div className={`toast-notification toast-${type}`}>
@@ -30,7 +21,7 @@ function Toast({
 			</div>
 			<button
 				className="toast-close"
-				onClick={onClose}
+				onClick={clearToast}
 				aria-label="Close notification"
 			>
 				✕

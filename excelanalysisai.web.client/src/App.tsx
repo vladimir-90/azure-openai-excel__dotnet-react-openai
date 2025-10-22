@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import QuestionForm from './components/QuestionForm';
 import AIAnalysisResult from './components/AnalysisResult';
 import Toast from './components/base/Toast';
+import { useToastStore } from './stores/toastStore';
 
 function App() {
 	const [aiModels, setAiModels] = useState<AIModelDto[]>([]);
@@ -21,7 +22,7 @@ function App() {
 		null
 	);
 	const [analyzing, setAnalyzing] = useState<boolean>(false);
-	const [toastMessage, setToastMessage] = useState<string | null>(null);
+	const showToast = useToastStore((state) => state.showToast);
 
 	useEffect(() => {
 		getAvailableAiModels().then((models) => setAiModels(models));
@@ -38,7 +39,7 @@ function App() {
 			if (error instanceof Error && !!error.message) {
 				errorMessage = error.message;
 			}
-			setToastMessage(errorMessage);
+			showToast(errorMessage, 'error');
 		} finally {
 			setAnalyzing(false);
 		}
@@ -53,13 +54,7 @@ function App() {
 			className="container d-flex justify-content-center align-items-center"
 			style={{ minHeight: '100vh' }}
 		>
-			{toastMessage && (
-				<Toast
-					message={toastMessage}
-					type="error"
-					onClose={() => setToastMessage(null)}
-				/>
-			)}
+			<Toast />
 			<QuestionForm
 				aiModels={aiModels}
 				testDataSets={testDataSets}
