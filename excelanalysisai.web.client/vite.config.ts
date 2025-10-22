@@ -61,6 +61,10 @@ export default defineConfig({
 				target,
 				secure: false,
 			},
+			'^/api/ExcelAnalysis': {
+				target,
+				secure: false,
+			},
 		},
 		port: parseInt(env.DEV_SERVER_PORT || '62470'),
 		https: {
