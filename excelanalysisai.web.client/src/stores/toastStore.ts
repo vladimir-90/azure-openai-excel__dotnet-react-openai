@@ -2,26 +2,54 @@ import { create } from 'zustand';
 
 export type ToastType = 'error' | 'success' | 'info';
 
-interface ToastState {
-	message: string | null;
+export interface Toast {
+	id: string;
+	message: string;
 	type: ToastType;
-	showToast: (message: string, type: ToastType, duration?: number) => void;
-	clearToast: () => void;
 }
 
-export const useToastStore = create<ToastState>((set) => ({
-	message: null,
-	type: 'error',
-	showToast: (message: string, type: ToastType, duration = 5000) => {
-		set({ message, type });
+interface ToastState {
+	toasts: Toast[];
+	showToast: (message: string, type: ToastType, duration?: number) => string;
+	removeToast: (id: string) => void;
+}
 
-		// Clear the toast after the specified duration
+const timeoutMap = new Map<string, ReturnType<typeof setTimeout>>();
+
+export const useToastStore = create<ToastState>((set) => ({
+	toasts: [],
+	showToast: (message: string, type: ToastType, duration = 5000) => {
+		const id = `${Date.now()}-${Math.random()}`;
+		const toast: Toast = { id, message, type };
+
+		set((state) => ({
+			toasts: [...state.toasts, toast],
+		}));
+
+		// Set up automatic expiration for this toast
 		const timeoutId = setTimeout(() => {
-			set({ message: null });
+			set((state) => ({
+				toasts: state.toasts.filter((t) => t.id !== id),
+			}));
+			timeoutMap.delete(id);
 		}, duration);
 
-		// Return cleanup function in case we need to cancel the timeout
-		return () => clearTimeout(timeoutId);
+		// Store the timeout so it can be cancelled if needed
+		timeoutMap.set(id, timeoutId);
+
+		return id;
 	},
-	clearToast: () => set({ message: null }),
+	removeToast: (id: string) => {
+		// Cancel the auto-expiration timeout if it exists
+		const timeoutId = timeoutMap.get(id);
+		if (timeoutId) {
+			clearTimeout(timeoutId);
+			timeoutMap.delete(id);
+		}
+
+		// Remove the toast from the state
+		set((state) => ({
+			toasts: state.toasts.filter((t) => t.id !== id),
+		}));
+	},
 }));
