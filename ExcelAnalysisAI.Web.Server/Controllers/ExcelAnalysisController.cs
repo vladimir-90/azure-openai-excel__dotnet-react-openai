@@ -8,12 +8,12 @@ namespace ExcelAnalysisAI.Web.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ExcelAnalysisController(IWebHostEnvironment _env, AzureOpenAIConfig _openAIConfig) : ControllerBase
+public class ExcelAnalysisController(IWebHostEnvironment _env, List<AzureOpenAIConfig> _openAIConfigs) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> ExecuteExcelQuery([FromBody] ExcelAnalysisQueryDto dto)
     {
-        var aiModelConfig = _openAIConfig.GetModelConfig(dto.ModelType);
+        var aiModelConfig = _openAIConfigs.GetModelConfig(dto.ModelType);
         var queryProcessor = new AIExcelQueryProcessor_InitialSample(aiModelConfig);
 
         var dirPath = Path.Combine(_env.ContentRootPath, "Data", dto.DatasetName);

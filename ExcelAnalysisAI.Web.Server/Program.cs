@@ -12,7 +12,7 @@ builder.Services.AddControllers()
     });
 
 builder.Configuration.AddJsonFile("appsettings.azure-openai.json");
-builder.Services.AddSingleton(builder.Configuration.GetSection("AzureOpenAI").Get<AzureOpenAIConfig>()!);
+builder.Services.AddSingleton(builder.Configuration.GetSection("AzureOpenAI").Get<List<AzureOpenAIConfig>>()!);
 
 // Requests handling
 
