@@ -54,3 +54,193 @@ body {
 	transform: rotate(90deg);
 	transition: transform 0.2s ease;
 }
+
+// Chat UI Variables
+$chat-primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$chat-ai-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+$chat-system-gradient: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+$chat-background-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+// Chat layout components
+.chat {
+	&-background {
+		min-height: 100vh;
+		background: $chat-background-gradient;
+	}
+
+	&-card {
+		background: rgba(255, 255, 255, 0.95);
+		backdrop-filter: blur(20px);
+		box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+		border-radius: 20px;
+	}
+
+	&-header {
+		background: linear-gradient(
+			135deg,
+			rgba(255, 255, 255, 0.9) 0%,
+			rgba(255, 255, 255, 0.7) 100%
+		);
+		backdrop-filter: blur(10px);
+	}
+
+	&-container {
+		max-height: 70vh;
+		overflow-y: auto;
+		scrollbar-width: thin;
+		scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+
+		&::-webkit-scrollbar {
+			width: 8px;
+		}
+
+		&::-webkit-scrollbar-track {
+			background: rgba(0, 0, 0, 0.05);
+			border-radius: 10px;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background: $chat-primary-gradient;
+			border-radius: 10px;
+			border: 2px solid transparent;
+			background-clip: content-box;
+		}
+
+		&::-webkit-scrollbar-thumb:hover {
+			background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+			background-clip: content-box;
+		}
+	}
+}
+
+// Message components
+.message {
+	&-bubble {
+		animation: messageSlideIn 0.4s ease-out;
+	}
+
+	&-text {
+		white-space: break-spaces;
+		line-height: 1.5;
+	}
+
+	&-width {
+		max-width: 80%;
+	}
+}
+
+// Message bubble variants
+.user-message-bubble {
+	background: $chat-primary-gradient;
+	border-radius: 25px 25px 8px 25px;
+	box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	transform: translateZ(0);
+}
+
+.ai-message-bubble {
+	background: $chat-ai-gradient;
+	border-radius: 25px 25px 25px 8px;
+	box-shadow: 0 8px 25px rgba(16, 185, 129, 0.25);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	transform: translateZ(0);
+}
+
+.system-message-bubble {
+	background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+	border-radius: 25px 25px 25px 8px;
+	border: 1px solid #dee2e6;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+	transform: translateZ(0);
+}
+
+// Avatar components
+.avatar {
+	&-float {
+		animation: float 2s ease-in-out infinite;
+	}
+
+	&-online-indicator {
+		width: 12px;
+		height: 12px;
+		background: #22c55e;
+		bottom: 2px;
+		right: 2px;
+		border: 2px solid white;
+	}
+}
+
+// Avatar variants
+.user-avatar {
+	width: 48px;
+	height: 48px;
+	background: $chat-primary-gradient;
+	font-size: 0.7rem;
+	box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+	border: 3px solid white;
+}
+
+.ai-avatar {
+	width: 48px;
+	height: 48px;
+	background: $chat-ai-gradient;
+	font-size: 0.7rem;
+	box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+	border: 3px solid white;
+}
+
+.system-avatar {
+	width: 48px;
+	height: 48px;
+	background: $chat-system-gradient;
+	font-size: 0.65rem;
+	box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+	border: 3px solid white;
+}
+
+// Cost badge components
+.cost-badge {
+	&-ai {
+		background: rgba(255, 255, 255, 0.15);
+		color: rgba(255, 255, 255, 0.8);
+		font-size: 0.7rem;
+		backdrop-filter: blur(10px);
+	}
+
+	&-system {
+		background: rgba(0, 0, 0, 0.05);
+		color: rgba(0, 0, 0, 0.6);
+		font-size: 0.7rem;
+		border: 1px solid rgba(0, 0, 0, 0.1);
+	}
+}
+
+// Animations
+@keyframes messageSlideIn {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes float {
+	0%,
+	100% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-2px);
+	}
+}
+
+// Gradient text effect
+.gradient-text {
+	background: $chat-primary-gradient;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
