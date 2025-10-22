@@ -13,14 +13,8 @@ public class ExcelAnalysisController(IWebHostEnvironment _env, AzureOpenAIConfig
     [HttpPost]
     public async Task<IActionResult> ExecuteExcelQuery([FromBody] ExcelAnalysisQueryDto dto)
     {
-        var aiModelInfo = _openAIConfig.Models.First(x => x.ModelType == dto.ModelType);
-        var queryProcessor = new AIExcelQueryProcessor_InitialSample(new()
-        {
-            Type = aiModelInfo.ModelType,
-            Endpoint = _openAIConfig.Endpoint,
-            ApiKey = _openAIConfig.ApiKey,
-            DeploymentName = aiModelInfo.DeploymentName
-        });
+        var aiModelConfig = _openAIConfig.GetModelConfig(dto.ModelType);
+        var queryProcessor = new AIExcelQueryProcessor_InitialSample(aiModelConfig);
 
         var dirPath = Path.Combine(_env.ContentRootPath, "Data", dto.DatasetName);
         var excelFileInfo = new ExcelFileInfo
