@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 
 import QuestionForm from './components/QuestionForm';
 import AIAnalysisResult from './components/AnalysisResult';
+import Spinner from './components/base/Spinner';
 
 function App() {
 	const [aiModels, setAiModels] = useState<AIModelDto[]>([]);
@@ -50,11 +51,8 @@ function App() {
 				style={{ minHeight: '100vh' }}
 			>
 				<div className="p-3">
-					<div
-						className="spinner-border text-primary me-3"
-						role="status"
-					>
-						<span className="visually-hidden">Loading...</span>
+					<div className="mb-3">
+						<Spinner />
 					</div>
 					Analyzing your data...
 				</div>

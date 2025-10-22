@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { DataSetInfoDto } from '../services/generation-settings.service';
+import Spinner from './base/Spinner';
 
 interface DatasetInfoProps {
 	datasetInfo: DataSetInfoDto | null;
@@ -13,13 +14,8 @@ function DatasetInfo({ datasetInfo, loading = false }: DatasetInfoProps) {
 	if (loading) {
 		return (
 			<div className="mt-2 p-3 bg-light rounded-3 border">
-				<div className="d-flex justify-content-center">
-					<div
-						className="spinner-border spinner-border-sm text-primary me-2"
-						role="status"
-					>
-						<span className="visually-hidden">Loading...</span>
-					</div>
+				<div className="d-flex justify-content-center align-items-center gap-2">
+					<Spinner sm />
 					<small className="text-muted">
 						Loading dataset info...
 					</small>
