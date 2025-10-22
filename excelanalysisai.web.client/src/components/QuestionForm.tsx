@@ -4,15 +4,21 @@ import type {
 	DataSetInfoDto,
 } from '../services/generation-settings.service';
 import { getTestDataset } from '../services/generation-settings.service';
+import type { ExcelAnalysisQueryDto } from '../services/excel-analysis.service';
 import AiModelPricing from './AiModelPricing';
 import DatasetInfo from './DatasetInfo';
 
 interface QuestionFormProps {
 	aiModels: AIModelDto[];
 	testDataSets: string[];
+	onAnalyze: (queryData: ExcelAnalysisQueryDto) => void;
 }
 
-function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
+function QuestionForm({
+	aiModels,
+	testDataSets,
+	onAnalyze,
+}: QuestionFormProps) {
 	const [selectedModel, setSelectedModel] = useState<string>('');
 	const [selectedDataSet, setSelectedDataSet] = useState<string>('');
 	const [question, setQuestion] = useState<string>('');
@@ -43,10 +49,6 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 			setDatasetInfo(null);
 		}
 	}, [selectedDataSet]);
-
-	const handleGoClick = () => {
-		// to_do
-	};
 
 	return (
 		<div className="card border-0 shadow-lg question-form-card">
@@ -164,7 +166,13 @@ function QuestionForm({ aiModels, testDataSets }: QuestionFormProps) {
 			{/* Footer with Action Button */}
 			<div className="card-footer bg-light border-0 text-end p-4">
 				<button
-					onClick={handleGoClick}
+					onClick={() =>
+						onAnalyze({
+							modelType: selectedModel,
+							datasetName: selectedDataSet,
+							question: question.trim(),
+						})
+					}
 					className={`btn btn-lg px-5 fw-semibold question-form-button ${
 						selectedModel && selectedDataSet && question.trim()
 							? 'question-form-button-enabled'

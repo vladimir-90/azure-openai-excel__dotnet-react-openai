@@ -1,0 +1,53 @@
+// TypeScript interfaces matching the backend DTOs
+export interface ExcelAnalysisQueryDto {
+	modelType: string;
+	datasetName: string;
+	question: string;
+}
+
+export interface OpenAIQueryCost {
+	inputTokenCount: number;
+	outputTokenCount: number;
+	totalCost: number;
+}
+
+export interface AIRequestResponseInfo {
+	request: string | null;
+	response: string;
+	cost: OpenAIQueryCost | null;
+	isSynthetic: boolean;
+}
+
+export interface AIQueryResult {
+	userQuery: string;
+	requests: AIRequestResponseInfo[];
+}
+
+/**
+ * Execute an Excel query using AI analysis
+ * @param queryDto The query parameters including model, dataset, and user query
+ * @returns Promise with the AI analysis result
+ */
+export async function executeExcelQuery(
+	queryDto: ExcelAnalysisQueryDto
+): Promise<AIQueryResult> {
+	try {
+		const response = await fetch(`/api/ExcelAnalysis`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(queryDto),
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+
+		const result: AIQueryResult = await response.json();
+		return result;
+	} catch (error) {
+		console.error('Failed to execute Excel query:', error);
+		throw error;
+	}
+}
