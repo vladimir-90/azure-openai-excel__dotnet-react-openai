@@ -69,6 +69,7 @@ $@"
     {
         InputTokenCount = result.Requests.Where(r => !r.IsSynthetic).Sum(r => r.Cost!.InputTokenCount),
         OutputTokenCount = result.Requests.Where(r => !r.IsSynthetic).Sum(r => r.Cost!.OutputTokenCount),
+        ReasoningTokenCount = result.Requests.Where(r => !r.IsSynthetic).Sum(r => r.Cost!.ReasoningTokenCount),
         TotalCost = result.Requests.Where(r => !r.IsSynthetic).Sum(r => r.Cost!.TotalCost)
     };
     Console.WriteLine(

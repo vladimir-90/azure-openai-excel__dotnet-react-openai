@@ -35,6 +35,7 @@ public static class OpenAIModelCostsCalculator
             {
                 InputTokenCount = usage.InputTokenCount,
                 OutputTokenCount = usage.OutputTokenCount,
+                ReasoningTokenCount = usage.OutputTokenDetails.ReasoningTokenCount,
                 TotalCost = cost
             };
         }
