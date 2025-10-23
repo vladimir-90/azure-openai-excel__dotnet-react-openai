@@ -1,30 +1,14 @@
 import type {
 	AIQueryResult,
 	AIRequestResponseInfo,
-	OpenAIQueryCost,
 } from '../services/excel-analysis.service';
+import AIRequestCost from './base/AIRequestCost';
 
 interface AIAnalysisResultProps {
 	result: AIQueryResult;
 }
 
 function AIAnalysisResult({ result }: AIAnalysisResultProps) {
-	const formatCost = (cost: OpenAIQueryCost | null) => {
-		if (!cost) return null;
-		return (
-			<div className="mt-2">
-				<span className="badge rounded-pill px-3 py-2 cost-badge-ai">
-					💰 ${cost.totalCost} • {cost.inputTokenCount}→
-					<span>{cost.outputTokenCount} </span>
-					{cost.reasoningTokenCount > 0 && (
-						<span>({cost.reasoningTokenCount}) </span>
-					)}
-					<span>tokens</span>
-				</span>
-			</div>
-		);
-	};
-
 	const renderUserMessage = () => (
 		<div className="mb-6 message-bubble">
 			<div className="d-flex align-items-end justify-content-end">
@@ -89,7 +73,7 @@ function AIAnalysisResult({ result }: AIAnalysisResultProps) {
 									<div className="message-text">
 										{message.response}
 									</div>
-									{message.cost && formatCost(message.cost)}
+									<AIRequestCost cost={message.cost} />
 								</div>
 							</div>
 						</div>
