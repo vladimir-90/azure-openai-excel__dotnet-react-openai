@@ -13,6 +13,7 @@ interface ToastState {
 	showToast: (message: string, type: ToastType, duration?: number) => string;
 	removeToast: (id: string) => void;
 	prolongToast: (id: string, duration?: number) => void;
+	cancelToastExpiration: (id: string) => void;
 }
 
 const timeoutMap = new Map<string, ReturnType<typeof setTimeout>>();
@@ -70,5 +71,15 @@ export const useToastStore = create<ToastState>((set) => ({
 
 		// Store the new timeout
 		timeoutMap.set(id, newTimeoutId);
+	},
+	cancelToastExpiration: (id: string) => {
+		// Cancel the existing timeout
+		const existingTimeoutId = timeoutMap.get(id);
+		if (existingTimeoutId) {
+			clearTimeout(existingTimeoutId);
+		}
+
+		// Remove timeout
+		timeoutMap.delete(id);
 	},
 }));

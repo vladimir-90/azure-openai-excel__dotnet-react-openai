@@ -3,7 +3,9 @@ import { useToastStore } from '../../stores/toastStore';
 function Toast() {
 	const toasts = useToastStore((state) => state.toasts);
 	const removeToast = useToastStore((state) => state.removeToast);
-	const prolongToast = useToastStore((state) => state.prolongToast);
+	const cancelToastExpiration = useToastStore(
+		(state) => state.cancelToastExpiration
+	);
 
 	return (
 		<div className="toast-container">
@@ -11,7 +13,7 @@ function Toast() {
 				<div
 					key={toast.id}
 					className={`toast-notification toast-${toast.type}`}
-					onClick={() => prolongToast(toast.id)}
+					onClick={() => cancelToastExpiration(toast.id)}
 					style={{ cursor: 'pointer' }}
 				>
 					<div className="toast-content">
