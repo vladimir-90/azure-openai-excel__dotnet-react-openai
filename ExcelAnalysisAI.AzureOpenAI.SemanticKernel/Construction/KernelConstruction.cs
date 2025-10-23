@@ -1,7 +1,8 @@
 ﻿using Microsoft.SemanticKernel;
 
-namespace ExcelAnalysisAI.AzureOpenAI.SemanticKernel;
+namespace ExcelAnalysisAI.AzureOpenAI.SemanticKernel.KernelWrapper;
 
+[Obsolete("here just for the sake of fast prototyping in future")]
 public static class KernelConstruction
 {
     public static Kernel Create(string endpoint, string apiKey, string deploymentName)

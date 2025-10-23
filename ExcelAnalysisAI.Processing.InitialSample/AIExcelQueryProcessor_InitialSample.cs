@@ -1,28 +1,27 @@
 ﻿using ExcelAnalysisAI.AzureOpenAI.Configuration;
 using ExcelAnalysisAI.AzureOpenAI.Models;
-using ExcelAnalysisAI.AzureOpenAI.SemanticKernel;
+using ExcelAnalysisAI.AzureOpenAI.SemanticKernel.KernelWrapper;
 using ExcelAnalysisAI.Core.Utility;
 using ExcelAnalysisAI.Processing.Core;
 using ExcelAnalysisAI.Processing.Core.Contracts;
 using ExcelAnalysisAI.Processing.InitialSample.Constants;
 using ExcelAnalysisAI.Processing.InitialSample.Extensions;
 using ExcelAnalysisAI.Processing.InitialSample.Handling;
-using Microsoft.SemanticKernel;
 
 namespace ExcelAnalysisAI.Processing.InitialSample;
 
 public class AIExcelQueryProcessor_InitialSample : IAIExcelQueryProcessor
 {
-    private readonly Kernel _kernel;
     private readonly OpenAIModelType _openAIModelType;
-    private readonly KernelFunction fn_getQueryDescription;
-    private readonly KernelFunction fn_getAnswer;
+    private readonly KernelWrapper _kernelEx;
     public AIExcelQueryProcessor_InitialSample(AIModelConfiguration config)
     {
-        _kernel = KernelConstruction.Create(config.Endpoint, config.ApiKey, config.DeploymentName);
         _openAIModelType = config.Type;
-        fn_getQueryDescription = KernelConstruction.CreateFunction(_kernel, Prompts.QueryDescription, 0.1, 200);
-        fn_getAnswer = KernelConstruction.CreateFunction(_kernel, Prompts.FinalAnswer, 0.3, 300);
+        _kernelEx = KernelWrapperBuilder
+            .ForConfiguration(config)
+            .WithFunction("fn_getQueryDescription", Prompts.QueryDescription, 200)
+            .WithFunction("fn_getAnswer", Prompts.FinalAnswer, 300)
+            .Build();
     }
 
     public async Task<AIQueryResult> Execute(string userQuery, ExcelFileInfo excelFileInfo)
@@ -34,8 +33,8 @@ public class AIExcelQueryProcessor_InitialSample : IAIExcelQueryProcessor
 
         // Analyze the query using AI
 
-        var fnResult_getQueryDescription = await _kernel.InvokeAsync(
-            fn_getQueryDescription,
+        var fnResult_getQueryDescription = await _kernelEx.InvokeFunction(
+            "fn_getQueryDescription",
             new() { ["input"] = userQuery, ["schema"] = excelFileInfo.Schema }
         );
 
@@ -64,8 +63,8 @@ public class AIExcelQueryProcessor_InitialSample : IAIExcelQueryProcessor
         }
         else
         {
-            var fnResult_getAnswer = await _kernel.InvokeAsync(
-                fn_getAnswer,
+            var fnResult_getAnswer = await _kernelEx.InvokeFunction(
+                "fn_getAnswer",
                 new() { ["input"] = userQuery, ["data"] = excel_data_str }
             );
 
