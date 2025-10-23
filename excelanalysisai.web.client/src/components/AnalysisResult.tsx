@@ -15,7 +15,11 @@ function AIAnalysisResult({ result }: AIAnalysisResultProps) {
 			<div className="mt-2">
 				<span className="badge rounded-pill px-3 py-2 cost-badge-ai">
 					💰 ${cost.totalCost} • {cost.inputTokenCount}→
-					{cost.outputTokenCount} tokens
+					<span>{cost.outputTokenCount} </span>
+					{cost.reasoningTokenCount > 0 && (
+						<span>({cost.reasoningTokenCount}) </span>
+					)}
+					<span>tokens</span>
 				</span>
 			</div>
 		);

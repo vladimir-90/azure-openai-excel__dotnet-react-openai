@@ -8,6 +8,7 @@ export interface ExcelAnalysisQueryDto {
 export interface OpenAIQueryCost {
 	inputTokenCount: number;
 	outputTokenCount: number;
+	reasoningTokenCount: number;
 	totalCost: number;
 }
 
