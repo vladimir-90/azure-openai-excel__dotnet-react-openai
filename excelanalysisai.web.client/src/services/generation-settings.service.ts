@@ -25,21 +25,14 @@ export interface DataSetInfoDto {
  * @returns {Promise<AIModelDto[]>} Array of available AI model DTOs
  */
 export async function getAvailableAiModels(): Promise<AIModelDto[]> {
-	try {
-		const response = await fetch(
-			'/api/GenerationSettings/available-ai-models'
+	const response = await fetch('/api/GenerationSettings/available-ai-models');
+	if (!response.ok) {
+		throw new Error(
+			`Failed to fetch AI models: ${response.status} ${response.statusText}`
 		);
-		if (!response.ok) {
-			throw new Error(
-				`Failed to fetch AI models: ${response.status} ${response.statusText}`
-			);
-		}
-
-		return await response.json();
-	} catch (error) {
-		console.error('Error fetching available AI models:', error);
-		throw error;
 	}
+
+	return await response.json();
 }
 
 /**
@@ -47,19 +40,14 @@ export async function getAvailableAiModels(): Promise<AIModelDto[]> {
  * @returns {Promise<string[]>} Array of available test data set names
  */
 export async function getTestDataSets(): Promise<string[]> {
-	try {
-		const response = await fetch('/api/GenerationSettings/test-data-sets');
-		if (!response.ok) {
-			throw new Error(
-				`Failed to fetch test data sets: ${response.status} ${response.statusText}`
-			);
-		}
-
-		return await response.json();
-	} catch (error) {
-		console.error('Error fetching test data sets:', error);
-		throw error;
+	const response = await fetch('/api/GenerationSettings/test-data-sets');
+	if (!response.ok) {
+		throw new Error(
+			`Failed to fetch test data sets: ${response.status} ${response.statusText}`
+		);
 	}
+
+	return await response.json();
 }
 
 /**
@@ -70,21 +58,16 @@ export async function getTestDataSets(): Promise<string[]> {
 export async function getTestDataset(
 	dataSetName: string
 ): Promise<DataSetInfoDto> {
-	try {
-		const response = await fetch(
-			`/api/GenerationSettings/test-data-sets/${encodeURIComponent(
-				dataSetName
-			)}`
+	const response = await fetch(
+		`/api/GenerationSettings/test-data-sets/${encodeURIComponent(
+			dataSetName
+		)}`
+	);
+	if (!response.ok) {
+		throw new Error(
+			`Failed to fetch dataset '${dataSetName}': ${response.status} ${response.statusText}`
 		);
-		if (!response.ok) {
-			throw new Error(
-				`Failed to fetch dataset '${dataSetName}': ${response.status} ${response.statusText}`
-			);
-		}
-
-		return await response.json();
-	} catch (error) {
-		console.error(`Error fetching dataset '${dataSetName}':`, error);
-		throw error;
 	}
+
+	return await response.json();
 }

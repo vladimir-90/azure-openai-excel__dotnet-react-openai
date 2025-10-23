@@ -9,6 +9,7 @@ import AiModelPricing from './AiModelPricing';
 import DatasetInfo from './DatasetInfo';
 import LazySelect from './base/LazySelect';
 import Spinner from './base/Spinner';
+import { useToastStore } from '../stores/toastStore';
 
 interface QuestionFormProps {
 	aiModels: AIModelDto[];
@@ -29,6 +30,8 @@ function QuestionForm({
 	const [datasetInfo, setDatasetInfo] = useState<DataSetInfoDto | null>(null);
 	const [loadingDataset, setLoadingDataset] = useState<boolean>(false);
 
+	const showToast = useToastStore((state) => state.showToast);
+
 	const selectedModelData = aiModels.find(
 		(model) => model.modelType === selectedModel
 	);
@@ -40,15 +43,9 @@ function QuestionForm({
 			setDatasetInfo(null);
 
 			getTestDataset(selectedDataSet)
-				.then((info) => {
-					setDatasetInfo(info);
-				})
-				.catch((error) => {
-					console.error('Failed to load dataset info:', error);
-				})
-				.finally(() => {
-					setLoadingDataset(false);
-				});
+				.then((info) => setDatasetInfo(info))
+				.catch(() => showToast('Failed to load dataset info', 'info'))
+				.finally(() => setLoadingDataset(false));
 		} else {
 			setDatasetInfo(null);
 		}

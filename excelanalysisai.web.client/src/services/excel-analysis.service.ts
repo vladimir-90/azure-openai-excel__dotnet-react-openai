@@ -31,26 +31,19 @@ export interface AIQueryResult {
 export async function executeExcelQuery(
 	queryDto: ExcelAnalysisQueryDto
 ): Promise<AIQueryResult> {
-	try {
-		const response = await fetch(`/api/ExcelAnalysis`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(queryDto),
-		});
+	const response = await fetch(`/api/ExcelAnalysis`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(queryDto),
+	});
 
-		if (!response.ok) {
-			const errorBody = await response.text();
-			throw new Error(
-				errorBody || `HTTP error! status: ${response.status}`
-			);
-		}
-
-		const result: AIQueryResult = await response.json();
-		return result;
-	} catch (error) {
-		console.error('Failed to execute Excel query:', error);
-		throw error;
+	if (!response.ok) {
+		const errorBody = await response.text();
+		throw new Error(errorBody || `HTTP error! status: ${response.status}`);
 	}
+
+	const result: AIQueryResult = await response.json();
+	return result;
 }
