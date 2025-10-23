@@ -1,5 +1,6 @@
 ﻿using ExcelAnalysisAI.AzureOpenAI.Models;
 using ExcelAnalysisAI.AzureOpenAI.Pricing;
+using ExcelAnalysisAI.AzureOpenAI.SemanticKernel.Helpers;
 using ExcelAnalysisAI.Core.Extensions;
 using ExcelAnalysisAI.Processing.Core.Contracts;
 using ExcelAnalysisAI.Processing.InitialSample;
@@ -16,7 +17,7 @@ var queryProcessingSvc = new AIExcelQueryProcessor_InitialSample(new()
     Endpoint = configuration["AZURE_OPENAI_ENDPOINT"]!,
     ApiKey = configuration["AZURE_OPENAI_API_KEY"]!,
     DeploymentName = configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]!
-});
+}, CustomReasoningLevel.Low);
 
 var excelFileInfo = new ExcelFileInfo
 {

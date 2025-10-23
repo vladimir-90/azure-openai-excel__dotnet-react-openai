@@ -1,4 +1,5 @@
 ﻿using ExcelAnalysisAI.AzureOpenAI.Models;
+using ExcelAnalysisAI.AzureOpenAI.SemanticKernel.Helpers;
 using ExcelAnalysisAI.Processing.Core.Contracts;
 using ExcelAnalysisAI.Processing.InitialSample;
 using ExcelAnalysisAI.Web.Server.Infrastructure;
@@ -17,7 +18,7 @@ public class ExcelAnalysisController(IWebHostEnvironment _env, List<AzureOpenAIC
         if (aiModelConfig is null)
             throw new NotSupportedException($"'{dto.ModelType}' configuration is absent");
 
-        var queryProcessor = new AIExcelQueryProcessor_InitialSample(aiModelConfig);
+        var queryProcessor = new AIExcelQueryProcessor_InitialSample(aiModelConfig, dto.ReasoningLevel);
 
         var dirPath = Path.Combine(_env.ContentRootPath, "Data", dto.DatasetName);
         var excelFileInfo = new ExcelFileInfo
@@ -36,6 +37,7 @@ public class ExcelAnalysisController(IWebHostEnvironment _env, List<AzureOpenAIC
 public class ExcelAnalysisQueryDto
 {
     public required OpenAIModelType ModelType { get; set; }
+    public required CustomReasoningLevel ReasoningLevel { get; set; }
     public required string DatasetName { get; set; }
     public required string Question { get; set; }
 }

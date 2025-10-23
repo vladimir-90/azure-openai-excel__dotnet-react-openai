@@ -1,5 +1,6 @@
 ﻿using ExcelAnalysisAI.AzureOpenAI.Configuration;
 using ExcelAnalysisAI.AzureOpenAI.Models;
+using ExcelAnalysisAI.AzureOpenAI.SemanticKernel.Helpers;
 using ExcelAnalysisAI.AzureOpenAI.SemanticKernel.KernelWrapper;
 using ExcelAnalysisAI.Core.Utility;
 using ExcelAnalysisAI.Processing.Core;
@@ -14,13 +15,13 @@ public class AIExcelQueryProcessor_InitialSample : IAIExcelQueryProcessor
 {
     private readonly OpenAIModelType _openAIModelType;
     private readonly KernelWrapper _kernelEx;
-    public AIExcelQueryProcessor_InitialSample(AIModelConfiguration config)
+    public AIExcelQueryProcessor_InitialSample(AIModelConfiguration config, CustomReasoningLevel reasoningLevel)
     {
         _openAIModelType = config.Type;
         _kernelEx = KernelWrapperBuilder
             .ForConfiguration(config)
-            .WithFunction("fn_getQueryDescription", Prompts.QueryDescription, 200)
-            .WithFunction("fn_getAnswer", Prompts.FinalAnswer, 300)
+            .WithFunction("fn_getQueryDescription", Prompts.QueryDescription, reasoningLevel)
+            .WithFunction("fn_getAnswer", Prompts.FinalAnswer, reasoningLevel)
             .Build();
     }
 

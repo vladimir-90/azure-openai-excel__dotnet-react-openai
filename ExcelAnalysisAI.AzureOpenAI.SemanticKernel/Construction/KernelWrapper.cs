@@ -1,7 +1,7 @@
 ﻿using ExcelAnalysisAI.AzureOpenAI.Configuration;
+using ExcelAnalysisAI.AzureOpenAI.SemanticKernel.Helpers;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
-using OpenAI.Chat;
 
 namespace ExcelAnalysisAI.AzureOpenAI.SemanticKernel.KernelWrapper;
 
@@ -39,7 +39,7 @@ public abstract class KernelWrapperBuilder
     }
 
     public abstract KernelWrapperBuilder WithFunction(
-        string function_local_id, string promptTemplate, int maxTokenCount);
+        string function_local_id, string promptTemplate, CustomReasoningLevel reasoningLevel);
 
     public KernelWrapper Build() => new KernelWrapper(_kernel, _functions);
 }
@@ -49,7 +49,7 @@ internal class KernelWrapperBuilder_Gpt4 : KernelWrapperBuilder
     public KernelWrapperBuilder_Gpt4(Kernel kernel) => _kernel = kernel;
 
     public override KernelWrapperBuilder_Gpt4 WithFunction(
-        string function_local_id, string promptTemplate, int maxTokenCount)
+        string function_local_id, string promptTemplate, CustomReasoningLevel reasoningLevel)
     {
         _functions[function_local_id] = _kernel.CreateFunctionFromPrompt(
             promptTemplate,
@@ -58,7 +58,7 @@ internal class KernelWrapperBuilder_Gpt4 : KernelWrapperBuilder
                 ExtensionData = new Dictionary<string, object>
                 {
                     { "temperature", 0.5 },
-                    { "max_tokens", maxTokenCount }
+                    { "max_tokens", reasoningLevel.GetMaxTokenCount() }
                 }
             }
         );
@@ -71,7 +71,7 @@ internal class KernelWrapperBuilder_Gpt5 : KernelWrapperBuilder
     public KernelWrapperBuilder_Gpt5(Kernel kernel) => _kernel = kernel;
 
     public override KernelWrapperBuilder_Gpt5 WithFunction(
-        string function_local_id, string promptTemplate, int maxTokenCount)
+        string function_local_id, string promptTemplate, CustomReasoningLevel reasoningLevel)
     {
         _functions[function_local_id] = _kernel.CreateFunctionFromPrompt(
             promptTemplate,
@@ -79,11 +79,9 @@ internal class KernelWrapperBuilder_Gpt5 : KernelWrapperBuilder
             {
                 ExtensionData = new Dictionary<string, object>
                 {
-                    { "max_completion_tokens", maxTokenCount }
+                    { "max_completion_tokens", reasoningLevel.GetMaxTokenCount() }
                 },
-#pragma warning disable OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-                ReasoningEffort = new ChatReasoningEffortLevel("high")
-#pragma warning restore OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+                ReasoningEffort = reasoningLevel.ToKernelEntity()
             }
         );
         return this;
@@ -95,7 +93,7 @@ internal class KernelWrapperBuilder_O : KernelWrapperBuilder
     public KernelWrapperBuilder_O(Kernel kernel) => _kernel = kernel;
 
     public override KernelWrapperBuilder_O WithFunction(
-        string function_local_id, string promptTemplate, int maxTokenCount)
+        string function_local_id, string promptTemplate, CustomReasoningLevel reasoningLevel)
     {
         _functions[function_local_id] = _kernel.CreateFunctionFromPrompt(
             promptTemplate,
@@ -103,11 +101,9 @@ internal class KernelWrapperBuilder_O : KernelWrapperBuilder
             {
                 ExtensionData = new Dictionary<string, object>
                 {
-                    { "max_completion_tokens", maxTokenCount }
+                    { "max_completion_tokens", reasoningLevel.GetMaxTokenCount() }
                 },
-#pragma warning disable OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-                ReasoningEffort = new ChatReasoningEffortLevel("medium")
-#pragma warning restore OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+                ReasoningEffort = reasoningLevel.ToKernelEntity()
             }
         );
         return this;
