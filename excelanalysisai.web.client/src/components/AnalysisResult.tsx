@@ -1,14 +1,44 @@
 import type {
 	AIQueryResult,
 	AIRequestResponseInfo,
+	ReasoningEffortLevel,
 } from '../services/excel-analysis.service';
+
 import AIRequestCost from './base/AIRequestCost';
+
+interface AnalysisInputs {
+	modelType: string;
+	reasoningLevel: ReasoningEffortLevel;
+	datasetName: string;
+}
 
 interface AIAnalysisResultProps {
 	result: AIQueryResult;
+	inputs: AnalysisInputs;
 }
 
-function AIAnalysisResult({ result }: AIAnalysisResultProps) {
+function AIAnalysisResult({ result, inputs }: AIAnalysisResultProps) {
+	const totals = result.requests.reduce(
+		(acc, msg) => {
+			if (msg.cost) {
+				return {
+					cost: acc.cost + msg.cost.totalCost,
+					inputTokens: acc.inputTokens + msg.cost.inputTokenCount,
+					outputTokens: acc.outputTokens + msg.cost.outputTokenCount,
+					reasoningTokens:
+						acc.reasoningTokens + msg.cost.reasoningTokenCount,
+				};
+			}
+			return acc;
+		},
+		{
+			cost: 0,
+			inputTokens: 0,
+			outputTokens: 0,
+			reasoningTokens: 0,
+		}
+	);
+
 	const renderUserMessage = () => (
 		<div className="mb-6 message-bubble">
 			<div className="d-flex align-items-end justify-content-end">
@@ -90,10 +120,111 @@ function AIAnalysisResult({ result }: AIAnalysisResultProps) {
 					<div className="col-12">
 						<div className="card border-0 position-relative overflow-hidden chat-card">
 							{/* Header */}
-							<div className="card-header border-0 text-center py-4 chat-header">
-								<h4 className="mb-1 fw-bold gradient-text">
-									🤖 Excel Analysis AI
-								</h4>
+							<div className="card-header border-0 chat-header-professional">
+								{/* Header Content */}
+								<div className="chat-header-content">
+									{/* Left Section: Query Parameters */}
+									<div className="chat-header-section">
+										<div className="chat-header-label">
+											Query
+										</div>
+										<div className="chat-header-params">
+											<div className="chat-header-param">
+												<span className="param-label">
+													Dataset:
+												</span>
+												<span className="param-value">
+													{inputs.datasetName}
+												</span>
+											</div>
+											<div className="chat-header-param">
+												<span className="param-label">
+													Model:
+												</span>
+												<span className="param-value">
+													{inputs.modelType}
+												</span>
+											</div>
+											<div className="chat-header-param">
+												<span className="param-label">
+													Reasoning:
+												</span>
+												<span className="param-value">
+													{inputs.reasoningLevel}
+												</span>
+											</div>
+										</div>
+									</div>
+
+									{/* Divider */}
+									<div className="chat-header-divider"></div>
+
+									{/* Middle Section: Token & Cost Metrics */}
+									<div className="chat-header-section">
+										<div className="chat-header-label">
+											AI Resource consumption
+										</div>
+										<div className="chat-header-metrics">
+											<div className="chat-header-metric">
+												<span className="metric-label">
+													Input:
+												</span>
+												<span className="metric-value">
+													{totals.inputTokens} tokens
+												</span>
+											</div>
+											<div className="chat-header-metric">
+												<span className="metric-label">
+													Output:
+												</span>
+												<span className="metric-value">
+													{totals.outputTokens} tokens
+												</span>
+											</div>
+											<div className="chat-header-metric">
+												<span className="metric-label">
+													Reasoning:
+												</span>
+												<span className="metric-value">
+													{totals.reasoningTokens}{' '}
+													tokens
+												</span>
+											</div>
+										</div>
+									</div>
+
+									<div className="chat-header-divider"></div>
+
+									{/* Right Section: Costs */}
+									<div className="chat-header-section">
+										<div className="chat-header-label">
+											Costs
+										</div>
+										<div className="chat-header-metrics">
+											<div className="chat-header-metric cost-highlight">
+												<span className="metric-label">
+													Total:
+												</span>
+												<span className="metric-value">
+													${totals.cost.toFixed(7)}
+												</span>
+											</div>
+											<div className="chat-header-metric">
+												<span className="metric-label">
+													In 1$:
+												</span>
+												<span className="metric-value">
+													{totals.cost > 0
+														? (
+																1 / totals.cost
+														  ).toFixed(1)
+														: '∞'}{' '}
+													executions
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 
 							{/* Chat Container */}

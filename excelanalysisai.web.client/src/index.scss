@@ -387,3 +387,128 @@ $chat-background-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
 }
+
+// Professional Header Styles for Analysis Results
+.chat-header {
+	&-professional {
+		padding: 16px 24px;
+		background: linear-gradient(
+			135deg,
+			rgba(255, 255, 255, 0.95) 0%,
+			rgba(255, 255, 255, 0.85) 100%
+		);
+		border-bottom: 1px solid rgba(102, 126, 234, 0.15);
+		backdrop-filter: blur(10px);
+	}
+
+	&-content {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 24px;
+		flex-wrap: wrap;
+		max-width: 100%;
+	}
+
+	&-section {
+		flex: 1;
+		min-width: 160px;
+	}
+
+	&-label {
+		font-size: 0.65rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.4px;
+		color: #667eea;
+		margin-bottom: 6px;
+		display: block;
+	}
+
+	&-params,
+	&-metrics {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	&-param,
+	&-metric {
+		display: flex;
+		gap: 6px;
+		font-size: 0.8rem;
+		align-items: center;
+
+		.param-label,
+		.metric-label {
+			font-weight: 600;
+			color: #495057;
+			min-width: 70px;
+			font-size: 0.75rem;
+		}
+
+		.param-value,
+		.metric-value {
+			color: #212529;
+			font-family: 'Monaco', 'Courier New', monospace;
+			font-weight: 500;
+			font-size: 0.8rem;
+		}
+
+		&.cost-highlight {
+			.metric-label {
+				color: #495057;
+				font-weight: 600;
+			}
+
+			.metric-value {
+				color: #212529;
+				font-family: 'Monaco', 'Courier New', monospace;
+				font-weight: 500;
+				font-size: 0.8rem;
+			}
+		}
+	}
+
+	&-divider {
+		width: 1px;
+		background: linear-gradient(
+			180deg,
+			rgba(102, 126, 234, 0) 0%,
+			rgba(102, 126, 234, 0.3) 50%,
+			rgba(102, 126, 234, 0) 100%
+		);
+		min-height: 50px;
+		margin: 0 8px;
+	}
+}
+
+// Responsive design for smaller screens
+@media (max-width: 768px) {
+	.chat-header {
+		&-professional {
+			padding: 12px 16px;
+		}
+
+		&-content {
+			flex-direction: column;
+			gap: 12px;
+			align-items: flex-start;
+		}
+
+		&-divider {
+			display: none;
+		}
+
+		&-param,
+		&-metric {
+			font-size: 0.75rem;
+
+			.param-label,
+			.metric-label {
+				min-width: auto;
+				margin-right: 2px;
+			}
+		}
+	}
+}

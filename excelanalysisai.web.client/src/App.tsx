@@ -1,18 +1,19 @@
+import type {
+	AIQueryResult,
+	ExcelAnalysisQueryDto,
+} from './services/excel-analysis.service';
 import {
 	getAvailableAiModels,
 	getTestDataSets,
 } from './services/generation-settings.service';
-import type { AIModelDto } from './services/generation-settings.service';
-import { executeExcelQuery } from './services/excel-analysis.service';
-import type {
-	ExcelAnalysisQueryDto,
-	AIQueryResult,
-} from './services/excel-analysis.service';
 import { useEffect, useState } from 'react';
 
-import QuestionForm from './components/QuestionForm';
 import AIAnalysisResult from './components/AnalysisResult';
+import type { AIModelDto } from './services/generation-settings.service';
+import QuestionForm from './components/QuestionForm';
+import type { ReasoningEffortLevel } from './services/excel-analysis.service';
 import Toast from './components/base/Toast';
+import { executeExcelQuery } from './services/excel-analysis.service';
 import { useToastStore } from './stores/toastStore';
 
 function App() {
@@ -21,6 +22,11 @@ function App() {
 	const [analysisResult, setAnalysisResult] = useState<AIQueryResult | null>(
 		null
 	);
+	const [queryInputs, setQueryInputs] = useState<{
+		modelType: string;
+		reasoningLevel: ReasoningEffortLevel;
+		datasetName: string;
+	} | null>(null);
 	const [analyzing, setAnalyzing] = useState<boolean>(false);
 	const showToast = useToastStore((state) => state.showToast);
 
@@ -34,6 +40,11 @@ function App() {
 		try {
 			const result = await executeExcelQuery(queryData);
 			setAnalysisResult(result);
+			setQueryInputs({
+				modelType: queryData.modelType,
+				reasoningLevel: queryData.reasoningLevel,
+				datasetName: queryData.datasetName,
+			});
 		} catch (error) {
 			let errorMessage = 'Analysis failed. Please try again.';
 			if (error instanceof Error && !!error.message) {
@@ -45,8 +56,10 @@ function App() {
 		}
 	};
 
-	if (analysisResult) {
-		return <AIAnalysisResult result={analysisResult} />;
+	if (analysisResult && queryInputs) {
+		return (
+			<AIAnalysisResult result={analysisResult} inputs={queryInputs} />
+		);
 	}
 
 	return (
