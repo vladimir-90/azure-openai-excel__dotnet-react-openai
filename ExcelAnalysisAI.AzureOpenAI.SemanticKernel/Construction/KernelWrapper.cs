@@ -22,8 +22,7 @@ public abstract class KernelWrapperBuilder
             .Build();
 
         if (config.Type == Models.OpenAIModelType.GPT_5_nano
-            || config.Type == Models.OpenAIModelType.GPT_5_mini
-            || config.Type == Models.OpenAIModelType.GPT_5_chat)
+            || config.Type == Models.OpenAIModelType.GPT_5_mini)
         {
             return new KernelWrapperBuilder_Gpt5(kernel);
         }
