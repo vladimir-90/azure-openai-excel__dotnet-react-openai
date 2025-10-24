@@ -12,9 +12,14 @@ interface AIAnalysisResultProps {
 		reasoningLevel: ReasoningEffortLevel;
 		datasetName: string;
 	};
+	onAskNewQuestion: () => void;
 }
 
-function AIAnalysisResult({ result, inputs }: AIAnalysisResultProps) {
+function AIAnalysisResult({
+	result,
+	inputs,
+	onAskNewQuestion,
+}: AIAnalysisResultProps) {
 	const totals = result.requests.reduce(
 		(acc, msg) => {
 			if (msg.cost) {
@@ -116,6 +121,12 @@ function AIAnalysisResult({ result, inputs }: AIAnalysisResultProps) {
 												} executions`
 											)}
 										</div>
+										<button
+											className="btn btn-link btn-sm mt-2 p-0"
+											onClick={onAskNewQuestion}
+										>
+											Ask New Question
+										</button>
 									</div>
 								</div>
 							</div>

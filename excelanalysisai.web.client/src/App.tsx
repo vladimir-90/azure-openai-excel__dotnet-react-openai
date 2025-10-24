@@ -58,7 +58,11 @@ function App() {
 
 	if (analysisResult && queryInputs) {
 		return (
-			<AIAnalysisResult result={analysisResult} inputs={queryInputs} />
+			<AIAnalysisResult
+				result={analysisResult}
+				inputs={queryInputs}
+				onAskNewQuestion={() => setAnalysisResult(null)}
+			/>
 		);
 	}
 
