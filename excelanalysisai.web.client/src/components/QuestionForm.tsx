@@ -1,14 +1,19 @@
-import { useState, useEffect } from 'react';
 import type {
 	AIModelDto,
 	DataSetInfoDto,
 } from '../services/generation-settings.service';
-import { getTestDataset } from '../services/generation-settings.service';
-import type { ExcelAnalysisQueryDto } from '../services/excel-analysis.service';
+import type {
+	ExcelAnalysisQueryDto,
+	ReasoningEffortLevel,
+} from '../services/excel-analysis.service';
+import { useEffect, useState } from 'react';
+
 import AiModelPricing from './AiModelPricing';
 import DatasetInfo from './DatasetInfo';
 import LazySelect from './base/LazySelect';
+import ReasoningEffortLevelPicker from './ReasoningEffortLevelPicker';
 import Spinner from './base/Spinner';
+import { getTestDataset } from '../services/generation-settings.service';
 import { useToastStore } from '../stores/toastStore';
 
 interface QuestionFormProps {
@@ -27,6 +32,9 @@ function QuestionForm({
 	const [selectedModel, setSelectedModel] = useState<string>('');
 	const [selectedDataSet, setSelectedDataSet] = useState<string>('');
 	const [question, setQuestion] = useState<string>('');
+	const [reasoningLevel, setReasoningLevel] = useState<
+		ReasoningEffortLevel | ''
+	>('');
 	const [datasetInfo, setDatasetInfo] = useState<DataSetInfoDto | null>(null);
 	const [loadingDataset, setLoadingDataset] = useState<boolean>(false);
 
@@ -113,14 +121,13 @@ function QuestionForm({
 					</div>
 
 					{/* Question Input */}
-					<div className="col-12 mt-4">
+					<div className="col-12">
 						<div className="form-floating">
 							<textarea
 								id="question-textarea"
 								value={question}
 								onChange={(e) => setQuestion(e.target.value)}
 								className="form-control question-form-textarea"
-								placeholder="What would you like to know about your data?"
 								rows={3}
 							/>
 							<label
@@ -135,6 +142,14 @@ function QuestionForm({
 							"Show me the average salary by department"
 						</div>
 					</div>
+
+					{/* Reasoning Level Selection */}
+					<div className="col-md-12">
+						<ReasoningEffortLevelPicker
+							value={reasoningLevel}
+							onChange={setReasoningLevel}
+						/>
+					</div>
 				</div>
 			</div>
 
@@ -146,18 +161,29 @@ function QuestionForm({
 							modelType: selectedModel,
 							datasetName: selectedDataSet,
 							question: question.trim(),
+							reasoningLevel:
+								reasoningLevel as ReasoningEffortLevel,
 						})
 					}
 					className={`btn btn-lg px-5 fw-semibold question-form-button ${
-						selectedModel && selectedDataSet && question.trim()
+						selectedModel &&
+						selectedDataSet &&
+						question.trim() &&
+						reasoningLevel
 							? 'question-form-button-enabled'
 							: 'question-form-button-disabled'
 					}`}
 					disabled={
-						!selectedModel || !selectedDataSet || !question.trim()
+						!selectedModel ||
+						!selectedDataSet ||
+						!question.trim() ||
+						!reasoningLevel
 					}
 				>
-					{!selectedModel || !selectedDataSet || !question.trim() ? (
+					{!selectedModel ||
+					!selectedDataSet ||
+					!question.trim() ||
+					!reasoningLevel ? (
 						<span>Complete the form above</span>
 					) : (
 						<span className="text-white">🚀 Analyze Data</span>

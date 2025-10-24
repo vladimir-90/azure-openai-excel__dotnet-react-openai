@@ -1,8 +1,17 @@
-// TypeScript interfaces matching the backend DTOs
+// TypeScript types and interfaces matching the backend DTOs
+export type ReasoningEffortLevel = 'Low' | 'Medium' | 'High';
+
+export const REASONING_EFFORT_LEVELS = [
+	{ level: 'Low' as ReasoningEffortLevel, tokens: 200 },
+	{ level: 'Medium' as ReasoningEffortLevel, tokens: 1000 },
+	{ level: 'High' as ReasoningEffortLevel, tokens: 5000 },
+];
+
 export interface ExcelAnalysisQueryDto {
 	modelType: string;
 	datasetName: string;
 	question: string;
+	reasoningLevel: ReasoningEffortLevel;
 }
 
 export interface OpenAIQueryCost {
