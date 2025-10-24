@@ -173,7 +173,8 @@ body {
 	}
 
 	&-textarea {
-		height: auto !important;
+		min-height: 100px !important;
+		max-height: 250px !important;
 		resize: vertical;
 	}
 

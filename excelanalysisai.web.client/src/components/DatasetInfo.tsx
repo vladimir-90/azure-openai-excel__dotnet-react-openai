@@ -9,7 +9,7 @@ interface DatasetInfoProps {
 
 function DatasetInfo({ datasetInfo, loading = false }: DatasetInfoProps) {
 	const [showSchema, setShowSchema] = useState(false);
-	const [showData, setShowData] = useState(true);
+	const [showData, setShowData] = useState(false);
 
 	if (loading) {
 		return (
