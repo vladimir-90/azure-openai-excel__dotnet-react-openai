@@ -1,3 +1,4 @@
+using ExcelAnalysisAI.Web.Server.Domain;
 using ExcelAnalysisAI.Web.Server.Infrastructure;
 using System.Text.Json.Serialization;
 
@@ -13,6 +14,8 @@ builder.Services.AddControllers()
 
 builder.Configuration.AddJsonFile("appsettings.azure-openai.json");
 builder.Services.AddSingleton(builder.Configuration.GetSection("AzureOpenAI").Get<List<AzureOpenAIConfig>>()!);
+
+builder.Services.AddTransient<IQueryProcessorFactory, QueryProcessorFactory>();
 
 // Requests handling
 

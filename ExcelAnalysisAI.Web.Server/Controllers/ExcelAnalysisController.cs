@@ -1,24 +1,20 @@
 ﻿using ExcelAnalysisAI.AzureOpenAI.Models;
 using ExcelAnalysisAI.AzureOpenAI.SemanticKernel.Helpers;
 using ExcelAnalysisAI.Processing.Core.Contracts;
-using ExcelAnalysisAI.Processing.InitialSample;
-using ExcelAnalysisAI.Web.Server.Infrastructure;
+using ExcelAnalysisAI.Web.Server.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExcelAnalysisAI.Web.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ExcelAnalysisController(IWebHostEnvironment _env, List<AzureOpenAIConfig> _openAIConfigs) : ControllerBase
+public class ExcelAnalysisController(IWebHostEnvironment _env, IQueryProcessorFactory _queryProcessorFactory)
+    : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> ExecuteExcelQuery([FromBody] ExcelAnalysisQueryDto dto)
     {
-        var aiModelConfig = _openAIConfigs.GetModelConfig(dto.ModelType);
-        if (aiModelConfig is null)
-            throw new NotSupportedException($"'{dto.ModelType}' configuration is absent");
-
-        var queryProcessor = new AIExcelQueryProcessor_InitialSample(aiModelConfig, dto.ReasoningLevel);
+        var queryProcessor = _queryProcessorFactory.Create(dto.ModelType, dto.ReasoningLevel);
 
         var dirPath = Path.Combine(_env.ContentRootPath, "Data", dto.DatasetName);
         var excelFileInfo = new ExcelFileInfo
