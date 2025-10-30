@@ -1,5 +1,7 @@
 # 📊💬 Azure Excel Chat
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/vladimir-90/azure-openai-excel__dotnet-react-openai)
+
 **Chat with your Excel files using natural language powered by Azure OpenAI!**
 
 Forked from https://github.com/donpotts/AzureExcelChat
